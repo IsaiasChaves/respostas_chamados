@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Respostas - Suporte Técnico</title>
+    <style>
+        :root {
+            --primary: #1a252f;
+            --secondary: #2c3e50;
+            --accent: #2980b9;
+            --success: #27ae60;
+            --danger: #e74c3c;
+            --light: #d1d8e0;
+            --text: #333;
+        }
+
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--light); margin: 0; display: flex; height: 100vh; color: var(--text); overflow: hidden; }
+        
+        /* TELA DE LOGIN */
+        #login-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--primary); display: flex; align-items: center;
+            justify-content: center; z-index: 9999;
+        }
+        .login-box {
+            background: white; padding: 40px; border-radius: 12px;
+            text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            width: 300px;
+        }
+        .login-box h2 { margin-bottom: 20px; color: var(--primary); }
+        .login-box input {
+            padding: 12px; width: 100%; margin-bottom: 15px;
+            border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box;
+            font-size: 1rem; text-align: center;
+        }
+        .login-box button {
+            background: var(--accent); color: white; border: none;
+            padding: 12px 25px; border-radius: 6px; cursor: pointer; width: 100%;
+            font-weight: bold; font-size: 1rem; transition: 0.3s;
+        }
+
+        /* MENU LATERAL */
+        nav { width: 260px; background: var(--primary); color: white; padding: 20px; display: flex; flex-direction: column; box-shadow: 2px 0 5px rgba(0,0,0,0.1); }
+        nav h2 { font-size: 1rem; border-bottom: 1px solid #3e4f5f; padding-bottom: 10px; margin-bottom: 20px; letter-spacing: 1px; color: #95a5a6; }
+        .tab-btn { background: none; border: none; color: #bdc3c7; padding: 12px 15px; text-align: left; cursor: pointer; border-radius: 5px; margin-bottom: 8px; transition: 0.3s; font-size: 0.95rem; }
+        .tab-btn:hover { background: var(--secondary); color: white; }
+        .tab-btn.active { background: var(--accent); color: white; font-weight: bold; }
+
+        /* CONTEÚDO PRINCIPAL */
+        main { flex: 1; padding: 30px; overflow-y: auto; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 900px; background: #f0f2f5; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); height: fit-content; }
+        
+        h1 { margin-top: 0; color: var(--primary); font-size: 1.6rem; border-left: 5px solid var(--accent); padding-left: 15px; margin-bottom: 20px; }
+        
+        .model-selector { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; margin-bottom: 25px; }
+        .model-btn { padding: 12px 10px; border: 1px solid #dfe6e9; border-radius: 6px; cursor: pointer; background: #fff; font-size: 0.85rem; transition: 0.2s; color: var(--secondary); font-weight: 500; height: 50px; display: flex; align-items: center; justify-content: center; text-align: center; }
+        .model-btn:hover { border-color: var(--accent); background: #f0f7ff; }
+        .model-btn.active { background: var(--accent); color: white; border-color: var(--accent); box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3); }
+
+        /* ÁREA DE INPUTS */
+        .input-group { background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px dashed #cbd5e0; }
+        .input-group label { display: block; margin-bottom: 8px; font-weight: bold; font-size: 0.9rem; color: var(--secondary); }
+        textarea, .input-text { width: 100%; padding: 12px; border: 1px solid #ced4da; border-radius: 6px; font-family: inherit; box-sizing: border-box; font-size: 0.9rem; margin-bottom: 10px; }
+        textarea { height: 100px; resize: vertical; }
+        
+        /* PREVIEW EDITÁVEL */
+        .preview-area { width: 100%; height: 200px; padding: 20px; border: 2px solid #e2e8f0; border-radius: 8px; background: #fdfdfd; font-family: 'Segoe UI', sans-serif; font-size: 1rem; line-height: 1.6; color: #2d3436; box-sizing: border-box; margin-top: 10px; }
+        
+        /* BOTÕES DE AÇÃO */
+        .action-group { display: flex; gap: 10px; margin-top: 20px; }
+        .copy-btn { flex: 3; background: var(--success); color: white; border: none; padding: 18px; border-radius: 6px; cursor: pointer; font-size: 1.1rem; font-weight: bold; transition: 0.3s; }
+        .clear-btn { flex: 1; background: var(--danger); color: white; border: none; padding: 18px; border-radius: 6px; cursor: pointer; font-size: 1.1rem; font-weight: bold; transition: 0.3s; }
+        .copy-btn:hover { background: #219150; transform: translateY(-2px); }
+        .clear-btn:hover { background: #c0392b; transform: translateY(-2px); }
+        
+        .hidden { display: none; }
+        #status { color: var(--success); font-weight: bold; text-align: center; margin-top: 10px; height: 1.2rem; }
+        .empty-msg { color: #95a5a6; font-style: italic; text-align: center; padding: 20px; grid-column: 1 / -1; }
+    </style>
+</head>
+<body>
+
+<div id="login-overlay">
+    <div class="login-box">
+        <h2>Acesso Restrito</h2>
+        <input type="password" id="pass-input" placeholder="Digite a senha..." onkeyup="if(event.key === 'Enter') checkPass()">
+        <button onclick="checkPass()">Entrar</button>
+        <p id="error-msg" style="color: #e74c3c; font-size: 0.85rem; margin-top: 10px; font-weight: bold;"></p>
+    </div>
+</div>
+
+<nav>
+    <h2>SISTEMAS</h2>
+    <button class="tab-btn active" id="btn-sei" onclick="showSystem('sei')">SEI</button>
+    <button class="tab-btn" id="btn-eturmalina" onclick="showSystem('eturmalina')">e-Turmalina</button>
+    <button class="tab-btn" id="btn-integracao" onclick="showSystem('integracao')">Integração</button>
+    <button class="tab-btn" id="btn-grp" onclick="showSystem('grp')">GRP</button>
+</nav>
+
+<main>
+    <div class="container">
+        <h1 id="system-title">SEI - Sistema Eletrônico de Informações</h1>
+        
+        <div id="sei-models" class="model-selector">
+            <button class="model-btn" onclick="selectModel('sei', 'criacao')">Criação de Usuário</button>
+            <button class="model-btn" onclick="selectModel('sei', 'lotacao')">Lotação</button>
+            <button class="model-btn" onclick="selectModel('sei', 'desligamento')">Desligamento</button>
+            <button class="model-btn" onclick="selectModel('sei', 'reabertura')">Reabertura de Processo</button>
+            <button class="model-btn" onclick="selectModel('sei', 'desanexar')">Desanexar Processo</button>
+            <button class="model-btn" onclick="selectModel('sei', 'restrito')">Processo Restrito</button>
+            <button class="model-btn" onclick="selectModel('sei', 'sem_resposta')">Chamado sem Resposta</button>
+            <button class="model-btn" onclick="selectModel('sei', 'unidade')">Mais de uma Unidade</button>
+            <button class="model-btn" onclick="selectModel('sei', 'planilha')">Pedir Planilha</button>
+        </div>
+
+        <div id="eturmalina-models" class="model-selector hidden">
+            <button class="model-btn" onclick="selectModel('eturmalina', 'criacao_acesso')">Criação de Acesso</button>
+            <button class="model-btn" onclick="selectModel('eturmalina', 'reset_senha')">Reset de Senha</button>
+            <button class="model-btn" onclick="selectModel('eturmalina', 'abaco')">Chamado Ábaco</button>
+        </div>
+
+        <div id="integracao-models" class="model-selector hidden">
+            <button class="model-btn" onclick="selectModel('integracao', 'criacao_email')">Criação de Email</button>
+            <button class="model-btn" onclick="selectModel('integracao', 'reset_senha')">Reset de Senha</button>
+        </div>
+
+        <div id="grp-models" class="model-selector hidden">
+            <div class="empty-msg">Nenhum modelo cadastrado para o GRP ainda.</div>
+        </div>
+
+        <div id="input-area" class="input-group hidden">
+            <div id="fields-container"></div>
+        </div>
+
+        <label>Visualização da Resposta (Editável):</label>
+        <textarea class="preview-area" id="preview" placeholder="Selecione um modelo acima..."></textarea>
+        
+        <div id="status"></div>
+        
+        <div class="action-group">
+            <button class="copy-btn" onclick="copyText()">COPIAR RESPOSTA</button>
+            <button class="clear-btn" onclick="clearAll()">LIMPAR CAMPOS</button>
+        </div>
+    </div>
+</main>
+
+<script>
+    const SENHA_CORRETA = "suporte123";
+    let currentSystem = 'sei';
+    let currentModel = '';
+
+    const database = {
+        sei: {
+            criacao: { inputs: ['Dados do Usuário'], fn: (v) => `Prezado(a),\n\nUsuário(s) cadastrado(s) conforme solicitado.\n\n${v[0]}\nSenha: é a mesma de acesso ao webmail, internet.\n\nEstamos à disposição para quaisquer dúvidas ou informações adicionais.` },
+            lotacao: { inputs: ['Dados'], fn: (v) => `Prezado(a),\n\nSua solicitação foi atendida.\n\n${v[0]}\n\nEstamos à disposição para quaisquer dúvidas ou informações adicionais.` },
+            desligamento: { inputs: [], fn: () => `Prezado(a),\n\nSua solicitação foi atendida. As permissões de acesso SEI, expiram hoje, às 23h59.\n\nEstamos à disposição para quaisquer dúvidas ou informações adicionais.` },
+            reabertura: { inputs: ['Dados'], fn: (v) => `Prezado(a),\n\nPermissão de reabertura de processo concedida para o último usuário a finalizar o processo.\nPermissão ativa até o próximo dia útil às 23h59, caso o usuário não efetue a reabertura no prazo, por favor abrir outro chamado solicitando liberação novamente.\n\n${v[0]}\n\n1 - Sair do SEI e entrar novamente;\n2 - Pesquisar o processo informado;\n3 - Clicar no ícone "Reabrir processo" que está localizado ao lado do ícone de "anotações".` },
+            desanexar: { inputs: ['Dados'], fn: (v) => `Prezado(a),\n\nPermissão ativa até o próximo dia útil às 23h59, caso o usuário não efetue a desanexação no prazo, por favor abrir outro chamado solicitando liberação novamente.\n\n${v[0]}\n\nPROCEDIMENTOS PARA DESANEXAÇÃO:\n\n1 - Pesquisar o processo principal informado;\n2 - Clicar no processo anexado;\n3 - Clicar no ícone "desanexar processo" , que está localizado ao lado do ícone de "Ciência";\n4 - Expor o motivo e clicar em salvar.` },
+            restrito: { inputs: [], fn: () => `Prezado(a),\n\nO processo informado encontra-se restrito. Por favor, anexar o print do andamento do processo para continuidade do atendimento.\n\nProcedimentos:\n1 - Consultar o processo\n2 - Clicar no botão “consultar andamento”` },
+            sem_resposta: { inputs: [], fn: () => `Prezado(a),\n\nDevido à falta de retorno, estamos finalizando este chamado.\n\nCaso necessite prosseguir, por favor, faça uma nova solicitação.` },
+            unidade: { inputs: [], fn: () => `Prezado(a),\n\nInformo que o(a) servidor(a) informado(a) já possui acesso com permissão de assinatura (Básico) em outra unidade.\n\nPara a concessão de assinatura em mais de um setor (unidade), é necessário anexar, no chamado, cópia da Portaria publicada no Diário Oficial, de forma explícita, citando “cumulativamente” ou “sem prejuízo das demais funções”.\n\nCaso não haja Portaria, recomendamos a utilização da funcionalidade “Bloco de Assinatura”, disponibilizada no SEI.\n\nPermanecemos à disposição para quaisquer esclarecimentos.` },
+            planilha: { inputs: [], fn: () => `Prezado(a),\n\nPara cadastro e acesso ao SEI, é necessário anexar a planilha de cadastro devidamente preenchida com os dados do(a) servidor(a).` }
+        },
+        eturmalina: {
+            criacao_acesso: { inputs: [], fn: () => `Prezado,\n\nO acesso ao sistema eTurmalina foi concedido.\n\nUsuário: CPF do servidor\nSenha: CPF do servidor\n\nO próprio sistema orientará o usuário quanto à troca de senha no primeiro acesso.\n\nLink de acesso: http://sigrh.ac.gov.br/eturmalina` },
+            reset_senha: { inputs: [], fn: () => `Prezado,\n\nInformo que foi realizado o reset de senha do acesso ao sistema eTurmalina.\n\nUsuário: CPF do servidor\nSenha: CPF do servidor\n\nO próprio sistema orientará o usuário quanto à troca de senha no primeiro acesso após o reset.\nLink de acesso: http://sigrh.ac.gov.br/eturmalina` },
+            abaco: { inputs: ['Número do Chamado'], fn: (v) => `Prezado(a),\n\nInformo que foi aberto chamado junto à empresa Ábaco (${v[0]}). Assim que obtivermos um retorno, entraremos em contato.` }
+        },
+        integracao: {
+            criacao_email: { inputs: ['Login', 'Senha Provisória'], fn: (v) => `Prezado(a),\n\nUsuário(s) cadastrado(s) conforme solicitado.\n\nLogin: ${v[0]}\nSenha Provisória: ${v[1]}\nO servidor(a) deve acessar o minhaconta.ac.gov.br\nUsar a senha provisória de forma escrita (não copiar e colar)\n\nEstamos à disposição para quaisquer dúvidas ou informações adicionais.` },
+            reset_senha: { inputs: ['Senha Provisória'], fn: (v) => `Prezado(a),\n\nSenha do servidor(a) redefinida!\nO servidor(a) deve acessar o minhaconta.ac.gov.br\nUsar a senha provisória de forma escrita (não copiar e colar): ${v[0]}` }
+        },
+        grp: {}
+    };
+
+    function checkPass() {
+        const input = document.getElementById('pass-input').value;
+        if(input === SENHA_CORRETA) {
+            document.getElementById('login-overlay').style.display = 'none';
+        } else {
+            document.getElementById('error-msg').innerText = "Senha incorreta!";
+        }
+    }
+
+    function showSystem(sys) {
+        currentSystem = sys;
+        currentModel = '';
+        const titles = { sei: 'Sistema SEI', eturmalina: 'e-Turmalina', integracao: 'Integração', grp: 'GRP' };
+        document.getElementById('system-title').innerText = titles[sys];
+        
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(`btn-${sys}`).classList.add('active');
+        
+        document.querySelectorAll('.model-selector').forEach(div => div.classList.add('hidden'));
+        document.getElementById(`${sys}-models`).classList.remove('hidden');
+        
+        document.getElementById('input-area').classList.add('hidden');
+        document.getElementById('preview').value = "";
+    }
+
+    function selectModel(sys, mod) {
+        currentModel = mod;
+        const config = database[sys][mod];
+        
+        document.querySelectorAll('.model-btn').forEach(b => b.classList.remove('active'));
+        event.target.classList.add('active');
+        
+        const container = document.getElementById('fields-container');
+        container.innerHTML = '';
+        
+        if(config.inputs && config.inputs.length > 0) {
+            document.getElementById('input-area').classList.remove('hidden');
+            config.inputs.forEach((labelTxt, index) => {
+                const label = document.createElement('label');
+                label.innerText = labelTxt + ":";
+                container.appendChild(label);
+                
+                if(sys === 'sei' && ['criacao', 'lotacao', 'reabertura', 'desanexar'].includes(mod)) {
+                    const area = document.createElement('textarea');
+                    area.id = `input-${index}`;
+                    area.placeholder = "elis.asandra / SEC\tSEC - SECSINC / SEC\tBásico";
+                    area.oninput = updatePreview;
+                    container.appendChild(area);
+                } else {
+                    const input = document.createElement('input');
+                    input.className = 'input-text';
+                    input.id = `input-${index}`;
+                    input.oninput = updatePreview;
+                    container.appendChild(input);
+                }
+            });
+        } else {
+            document.getElementById('input-area').classList.add('hidden');
+        }
+        updatePreview();
+    }
+
+    function updatePreview() {
+        if(!currentModel) return;
+        const config = database[currentSystem][currentModel];
+        const values = config.inputs.map((_, i) => document.getElementById(`input-${i}`).value || "____");
+        document.getElementById('preview').value = config.fn(values);
+    }
+
+    function copyText() {
+        const text = document.getElementById('preview').value;
+        if(!text) return;
+
+        navigator.clipboard.writeText(text).then(() => {
+            const status = document.getElementById('status');
+            status.innerText = "Copiado com sucesso!";
+            setTimeout(() => { status.innerText = ""; }, 2000);
+        });
+    }
+
+    function clearAll() {
+        if(!currentModel) return;
+        database[currentSystem][currentModel].inputs.forEach((_, i) => {
+            const el = document.getElementById(`input-${i}`);
+            if(el) el.value = '';
+        });
+        updatePreview();
+        document.getElementById('status').innerText = "Campos limpos!";
+        setTimeout(() => { document.getElementById('status').innerText = ""; }, 1500);
+    }
+</script>
+
+</body>
+</html>

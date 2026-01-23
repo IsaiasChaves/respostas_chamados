@@ -54,7 +54,7 @@
         h1 { margin-top: 0; color: var(--primary); font-size: 1.6rem; border-left: 5px solid var(--accent); padding-left: 15px; margin-bottom: 20px; }
         
         .model-selector { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; margin-bottom: 25px; }
-        .model-btn { padding: 12px 10px; border: 1px solid #dfe6e9; border-radius: 6px; cursor: pointer; background: #fff; font-size: 0.85rem; transition: 0.2s; color: var(--secondary); font-weight: 500; height: 50px; display: flex; align-items: center; justify-content: center; text-align: center; }
+        .model-btn { padding: 12px 10px; border: 1px solid #dfe6e9; border-radius: 6px; cursor: pointer; background: #fff; font-size: 0.85rem; transition: 0.2s; color: var(--secondary); font-weight: 500; height: 50px; display: flex; align-items: center; justify-content: center; text-align: center; text-decoration: none; }
         .model-btn:hover { border-color: var(--accent); background: #f0f7ff; }
         .model-btn.active { background: var(--accent); color: white; border-color: var(--accent); box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3); }
 
@@ -96,6 +96,7 @@
     <button class="tab-btn" id="btn-eturmalina" onclick="showSystem('eturmalina')">e-Turmalina</button>
     <button class="tab-btn" id="btn-integracao" onclick="showSystem('integracao')">Integração</button>
     <button class="tab-btn" id="btn-grp" onclick="showSystem('grp')">GRP</button>
+    <button class="tab-btn" id="btn-utilidades" onclick="showSystem('utilidades')">Utilidades</button>
 </nav>
 
 <main>
@@ -129,6 +130,24 @@
 
         <div id="grp-models" class="model-selector hidden">
             <div class="empty-msg">Nenhum modelo cadastrado para o GRP ainda.</div>
+        </div>
+
+        <div id="utilidades-models" class="model-selector hidden">
+            <a href="https://isaiaschaves.github.io/site_letras_maiusculas/" target="_blank" class="model-btn">Letras Maiúsculas</a>
+            <a href="https://diario.ac.gov.br/" target="_blank" class="model-btn">Diário Oficial</a>
+            <a href="https://app.sei.ac.gov.br/" target="_blank" class="model-btn">SEI Produção</a>
+            <a href="https://app.sei.ac.gov.br/sip" target="_blank" class="model-btn">SIP Produção</a>
+            <a href="https://integracao.ac.gov.br/" target="_blank" class="model-btn">Integração</a>
+            <a href="http://grp.ac.gov.br/asi/web?action=start&target=loginClass" target="_blank" class="model-btn">GRP Acre</a>
+            <a href="https://seitreinar.ac.gov.br/" target="_blank" class="model-btn">SEI Treinar</a>
+            <a href="https://seitreinar.ac.gov.br/sip" target="_blank" class="model-btn">SIP Treinar</a>
+			<a href="https://mensageiro.ac.gov.br/home" target="_blank" class="model-btn">Rocket SEAD</a>
+			<a href="https://acl.ac.gov.br/login" target="_blank" class="model-btn">ACL</a>
+			<a href="https://www.ac.gov.br/" target="_blank" class="model-btn">MeuAC</a>
+			<a href="https://reuse.ac.gov.br/inicio" target="_blank" class="model-btn">ReUse</a>
+			<a href="https://sigrh.ac.gov.br/eturmalina/" target="_blank" class="model-btn">e-Turmalina</a>
+			<a href="https://sigrh.ac.gov.br/quartzo/" target="_blank" class="model-btn">Quartzo</a>
+			<a href="https://sigrh.ac.gov.br/esocial/" target="_blank" class="model-btn">e-Social</a>
         </div>
 
         <div id="input-area" class="input-group hidden">
@@ -233,18 +252,18 @@
             },
             lotacao: { 
                 inputs: ['Dados'], 
-                placeholder: "Ex: meudeus.olazu / SEC\tSEC - SECSINC / SEC\tBásico",
+                placeholder: "Ex: salve.engano / SEC\tSEC - SECSINC / SEC\tBásico",
                 fn: (v) => `Prezado(a),\n\nSua solicitação foi atendida.\n${v[0]}\n\nEstamos à disposição para quaisquer dúvidas ou informações adicionais.` 
             },
             desligamento: { inputs: [], fn: () => `Prezado(a),\n\nSua solicitação foi atendida. As permissões de acesso SEI, expiram hoje, às 23h59.\n\nEstamos à disposição para quaisquer dúvidas ou informações adicionais.` },
             reabertura: { 
                 inputs: ['Dados'], 
-                placeholder: "Ex: salve.engano / SEC\tSEC - SECSINC / SEC\tReabreProcesso",
+                placeholder: "Ex: aique.susto / SEC\tSEC - SECSINC / SEC\tReabreProcesso",
                 fn: (v) => `Prezado(a),\n\nPermissão de reabertura de processo concedida para o último usuário a finalizar o processo.\nPermissão ativa até o próximo dia útil às 23h59, caso o usuário não efetue a reabertura no prazo, por favor abrir outro chamado solicitando liberação novamente.\n\n${v[0]}\n\n1 - Sair do SEI e entrar novamente;\n2 - Pesquisar o processo informado;\n3 - Clicar no ícone "Reabrir processo" que está localizado ao lado do ícone de "anotações".` 
             },
             desanexar: { 
                 inputs: ['Dados'], 
-                placeholder: "Ex: aique.susto / SEC\tSEC - SECSINC / SEC\tDesanexaProcesso",
+                placeholder: "Ex: eitu.deoculos / SEC\tSEC - SECSINC / SEC\tDesanexaProcesso",
                 fn: (v) => `Prezado(a),\n\nPermissão ativa até o próximo dia útil às 23h59, caso o usuário não efetue a desanexação no prazo, por favor abrir outro chamado solicitando liberação novamente.\n\n${v[0]}\n\nPROCEDIMENTOS PARA DESANEXAÇÃO:\n\n1 - Pesquisar o processo principal informado;\n2 - Clicar no processo anexado;\n3 - Clicar no ícone "desanexar processo" , que está localizado ao lado do ícone de "Ciência";\n4 - Expor o motivo e clicar em salvar.` 
             },
             restrito: { inputs: [], fn: () => `Prezado(a),\n\nO processo informado encontra-se restrito. Por favor, anexar o print do andamento do processo para continuidade do atendimento.\n\nProcedimentos:\n1 - Consultar o processo\n2 - Clicar no botão “consultar andamento”` },
@@ -270,7 +289,8 @@
             criacao_email: { inputs: ['Login', 'Senha Provisória'], fn: (v) => `Prezado(a),\n\nUsuário(s) cadastrado(s) conforme solicitado.\n\nLogin: ${v[0]}\nSenha Provisória: ${v[1]}\nO servidor(a) deve acessar o minhaconta.ac.gov.br\nUsar a senha provisória de forma escrita (não copiar e colar)\n\nEstamos à disposição para quaisquer dúvidas ou informações adicionais.` },
             reset_senha: { inputs: ['Senha Provisória'], fn: (v) => `Prezado(a),\n\nSenha do servidor(a) redefinida!\nO servidor(a) deve acessar o minhaconta.ac.gov.br\nUsar a senha provisória de forma escrita (não copiar e colar): ${v[0]}` }
         },
-        grp: {}
+        grp: {},
+        utilidades: {}
     };
 
     function checkPass() {
@@ -285,7 +305,7 @@
     function showSystem(sys) {
         currentSystem = sys;
         currentModel = '';
-        const titles = { sei: 'Sistema SEI', eturmalina: 'e-Turmalina', integracao: 'Integração', grp: 'GRP' };
+        const titles = { sei: 'Sistema SEI', eturmalina: 'e-Turmalina', integracao: 'Integração', grp: 'GRP', utilidades: 'Utilidades e Links Importantes' };
         document.getElementById('system-title').innerText = titles[sys];
         
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -299,6 +319,7 @@
     }
 
     function selectModel(sys, mod) {
+        if (sys === 'utilidades') return;
         currentModel = mod;
         const config = database[sys][mod];
         
@@ -398,7 +419,7 @@
         setTimeout(() => { document.getElementById('status').innerText = ""; }, 1500);
     }
 
-    //bloqueia o inspecionar
+    // BLOQUEIO DE INSPECIONAR E F12
     document.addEventListener('contextmenu', event => event.preventDefault());
     document.onkeydown = function(e) {
         if (e.keyCode == 123 || 
@@ -412,4 +433,3 @@
 
 </body>
 </html>
-

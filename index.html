@@ -112,6 +112,8 @@
             <button class="model-btn" onclick="selectModel('sei', 'sem_resposta')">Chamado sem Resposta</button>
             <button class="model-btn" onclick="selectModel('sei', 'unidade')">Mais de uma Unidade</button>
             <button class="model-btn" onclick="selectModel('sei', 'planilha')">Pedir Planilha</button>
+            <button class="model-btn" onclick="selectModel('sei', 'abertura_bd')">Abertura Demanda BD</button>
+            <button class="model-btn" onclick="selectModel('sei', 'demanda_user')">Abertura Demanda/User</button>
         </div>
 
         <div id="eturmalina-models" class="model-selector hidden">
@@ -145,6 +147,78 @@
     </div>
 </main>
 
+<datalist id="lista-orgaos">
+    <option value="ACREDATA - EMPRESA DE PROCESSAMENTO DE DADOS DO ACRE">
+    <option value="ACREPREVIDENCIA - INSTITUTO DE PREVIDENCIA DO ESTADO DO ACRE">
+    <option value="AGEAC - AGENCIA REGULADORA DOS SERVIÇOS PÚBLICOS DO ESTADO DO ACRE">
+    <option value="ANAC - AGENCIA DE NEGOCIOS DO ACRE S.A.">
+    <option value="BANACRE - BANCO DO ESTADO DO ACRE SA">
+    <option value="CAGEACRE - COMPANHIA DE ARMAZENS GERAIS E ENTREPOSTOS DO ACRE">
+    <option value="CAL - CONSÓRCIO INTERESTADUAL DE DESENVOLVIMENTO DA AMAZÔNIA LEGAL">
+    <option value="CASACIVIL - CASA CIVIL">
+    <option value="CASMIL - CASA MILITAR">
+    <option value="CBMAC - CORPO DE BOMBEIROS MILITAR">
+    <option value="CDSA - COMPANHIA DE DESENVOLVIMENTO E SERVIÇOS AMBIENTAIS">
+    <option value="CEPDC - COORDENADORIA ESTADUAL DE PROTEÇÃO E DEFESA CIVIL">
+    <option value="CGE - CONTROLADORIA GERAL DO ESTADO DO ACRE">
+    <option value="CILA - COMPANHIA INDUSTRIAL DE LATICINIOS DO ACRE">
+    <option value="CODISACRE - COMPANHIA DE DESENVOLVIMENTO INDUSTRIAL DO ESTADO DO ACRE">
+    <option value="COHAB - COMPANHIA DE HABITAÇÃO DO ACRE">
+    <option value="COLONACRE - COMPANHIA DE DESENVOLVIMENTO AGRÁRIO E COLONIZAÇÃO DO ACRE">
+    <option value="DERACRE - DEPARTAMENTO DE ESTRADAS DE RODAGEM INFRAESTRUTURA HIDROVIÁRIA E AEROPORTUÁRIA DO ACRE">
+    <option value="DETRAN - DEPARTAMENTO ESTADUAL DE TRÂNSITO">
+    <option value="DPE - DEFENSORIA PÚBLICA DO ESTADO DO ACRE">
+    <option value="EMATER - EMPRESA DE ASSISTÊNCIA TÉCNICA E EXTENSÃO RURAL DO ACRE">
+    <option value="FADES - FUNDAÇÃO DE APOIO AO DESENVOLVIMENTO ECONÔMICO E SOCIAL DO ACRE">
+    <option value="FAPAC - FUNDAÇÃO DE AMPARO À PESQUISA DO ESTADO DO ACRE">
+    <option value="FDRHCD - FUNDAÇÃO DE DESENVOLVIMENTO DE RECURSOS HUMANOS DA CULTURA E DO DESPORTO DO ESTADO DO ACRE">
+    <option value="FEM - FUNDAÇÃO DE CULTURA ELIAS MANSOUR">
+    <option value="FUNBESA - FUNDAÇÃO DO BEM ESTAR SOCIAL DO ACRE">
+    <option value="FUNDAC - FUNDAÇÃO ALDEIA DE COMUNICAÇÃO DO ACRE">
+    <option value="FUNDHACRE - FUNDAÇÃO HOSPITAL ESTADUAL DO ACRE">
+    <option value="FUNTAC - FUNDAÇÃO DE TECNOLOGIA DO ACRE">
+    <option value="GABGOV - GABINETE DO GOVERNADOR">
+    <option value="GABVICE - GABINETE DO(A) VICE-GOVERNADOR(A)">
+    <option value="IAPEN - INSTITUTO DE ADMINISTRAÇÃO PENITENCIÁRIA">
+    <option value="IDAF - INSTITUTO DE DEFESA AGROPECUÁRIA E FLORESTAL DO ESTADO DO ACRE">
+    <option value="IEPTEC - INSTITUTO ESTADUAL DE EDUCAÇÃO PROFISSIONAL E TECNOLÓGICA">
+    <option value="IMAC - INSTITUTO DE MEIO AMBIENTE DO ACRE">
+    <option value="IMC - INSTITUTO DE MUDANÇAS CLIMATICAS E REGULAÇÃO DE SERVIÇOS AMBIENTAIS">
+    <option value="IPEM - INSTITUTO DE PESOS E MEDIDAS DO ESTADO DO ACRE">
+    <option value="ISE - INSTITUTO SOCIOEDUCATIVO DO ESTADO DO ACRE">
+    <option value="ITERACRE - INSTITUTO DE TERRAS DO ACRE">
+    <option value="JUCEAC - JUNTA COMERCIAL DO ESTADO DO ACRE">
+    <option value="PCAC - POLICIA CIVIL DO ESTADO DO ACRE">
+    <option value="PGE - PROCURADORIA-GERAL DO ESTADO DO ACRE">
+    <option value="PMAC - POLÍCIA MILITAR">
+    <option value="PROCON - INSTITUTO DE PROTEÇÃO E DEFESA DO CONSUMIDOR DO ACRE">
+    <option value="REPAC - REPRESENTAÇÃO DO GOVERNO EM BRASÍLIA">
+    <option value="SANACRE - COMPANHIA DE SANEAMENTO DO ESTADO DO ACRE">
+    <option value="SANEACRE - SERVIÇO DE ÁGUA E ESGOTO DO ESTADO DO ACRE">
+    <option value="SEAD - SECRETARIA DE ESTADO DE ADMINISTRAÇÃO">
+    <option value="SEAGRI - SECRETARIA DE ESTADO DE AGRICULTURA">
+    <option value="SEASDH - SECRETARIA DE ESTADO DE ASSISTENCIA SOCIAL E DIREITOS HUMANOS">
+    <option value="SECOM - SECRETARIA DE ESTADO DE COMUNICAÇÃO">
+    <option value="SEE - SECRETARIA DE ESTADO DE EDUCAÇÃO E CULTURA">
+    <option value="SEEL - SECRETARIA EXTRAORDINÁRIA DE ESPORTE E LAZER">
+    <option value="SEFAZ - SECRETARIA DE ESTADO DA FAZENDA">
+    <option value="SEGOV - SECRETARIA DE ESTADO DE GOVERNO">
+    <option value="SEHURB - SECRETARIA DE ESTADO DE HABITAÇÃO E URBANISMO">
+    <option value="SEICT - SECRETARIA DE ESTADO DE INDÚSTRIA, CIÊNCIA E TECNOLOGIA">
+    <option value="SEJUSP - SECRETARIA DE ESTADO DE JUSTIÇA E SEGURANÇA PÚBLICA">
+    <option value="SEMA - SECRETARIA DE ESTADO DO MEIO AMBIENTE">
+    <option value="SEMULHER - SECRETARIA DE ESTADO DA MULHER">
+    <option value="SEOP - SECRETARIA DE ESTADO DE OBRAS PÚBLICAS">
+    <option value="SEPI - SECRETARIA EXTRAORDINARIA DOS POVOS INDIGENAS">
+    <option value="SEPLAG - SECRETARIA DE ESTADO DE PLANEJAMENTO E GESTÃO">
+    <option value="SEPLAN - SECRETARIA DE ESTADO DE PLANEJAMENTO">
+    <option value="SERF - SECRETARIA DE ESTADO DE RELAÇÕES FEDERATIVAS">
+    <option value="SESACRE - SECRETARIA DE ESTADO DE SAÚDE">
+    <option value="SETE - SECRETARIA DE ESTADO DE TURISMO E EMPREENDEDORISMO">
+    <option value="SPLAN - SECRETARIA DE ESTADO DE PLANEJAMENTO- EXTINTO">
+    <option value="SRPI - SECRETARIA DE RELAÇÕES POLÍTICAS E INSTITUCIONAIS">
+</datalist>
+
 <script>
     const SENHA_CORRETA = "suporte123";
     let currentSystem = 'sei';
@@ -160,7 +234,16 @@
             restrito: { inputs: [], fn: () => `Prezado(a),\n\nO processo informado encontra-se restrito. Por favor, anexar o print do andamento do processo para continuidade do atendimento.\n\nProcedimentos:\n1 - Consultar o processo\n2 - Clicar no botão “consultar andamento”` },
             sem_resposta: { inputs: [], fn: () => `Prezado(a),\n\nDevido à falta de retorno, estamos finalizando este chamado.\n\nCaso necessite prosseguir, por favor, faça uma nova solicitação.` },
             unidade: { inputs: [], fn: () => `Prezado(a),\n\nInformo que o(a) servidor(a) informado(a) já possui acesso com permissão de assinatura (Básico) em outra unidade.\n\nPara a concessão de assinatura em mais de um setor (unidade), é necessário anexar, no chamado, cópia da Portaria publicada no Diário Oficial, de forma explícita, citando “cumulativamente” ou “sem prejuízo das demais funções”.\n\nCaso não haja Portaria, recomendamos a utilização da funcionalidade “Bloco de Assinatura”, disponibilizada no SEI.\n\nPermanecemos à disposição para quaisquer esclarecimentos.` },
-            planilha: { inputs: [], fn: () => `Prezado(a),\n\nPara cadastro e acesso ao SEI, é necessário anexar a planilha de cadastro devidamente preenchida com os dados do(a) servidor(a).` }
+            planilha: { inputs: [], fn: () => `Prezado(a),\n\nPara cadastro e acesso ao SEI, é necessário anexar a planilha de cadastro devidamente preenchida com os dados do(a) servidor(a).` },
+            
+            abertura_bd: { 
+                inputs: ['Chamado nº', 'Tipo de Relatório', 'Órgão/Unidade/Usuário'], 
+                fn: (v) => `Em atenção ao chamado nº ${v[0]}, que solicita relatório ${v[1]} ${v[2]}.` 
+            },
+            demanda_user: { 
+                inputs: [], 
+                fn: () => `Prezado,\n\nPara atender à sua solicitação, foi necessária a abertura de uma demanda junto ao setor de Infraestrutura e Banco de Dados, com previsão de conclusão em até 7 dias úteis.\nApós a finalização, os relatórios serão anexados a este chamado.\n\nFicamos à disposição para quaisquer esclarecimentos.` 
+            }
         },
         eturmalina: {
             criacao_acesso: { inputs: [], fn: () => `Prezado,\n\nO acesso ao sistema eTurmalina foi concedido.\n\nUsuário: CPF do servidor\nSenha: CPF do servidor\n\nO próprio sistema orientará o usuário quanto à troca de senha no primeiro acesso.\n\nLink de acesso: http://sigrh.ac.gov.br/eturmalina` },
@@ -211,29 +294,69 @@
         
         if(config.inputs && config.inputs.length > 0) {
             document.getElementById('input-area').classList.remove('hidden');
-            config.inputs.forEach((labelTxt, index) => {
-                const label = document.createElement('label');
-                label.innerText = labelTxt + ":";
-                container.appendChild(label);
+            
+            
+            if (mod === 'abertura_bd') {
+                // Campo Chamado
+                container.innerHTML += `<label>Chamado nº:</label>
+                <input type="text" class="input-text" id="input-0" oninput="updatePreview()">`;
+
+                // Campo Seleção
+                container.innerHTML += `<label>Tipo de Relatório:</label>
+                <select class="input-text" id="input-1" onchange="updatePreview(); toggleBDField()">
+                    <option value="contendo os usuários que possuem acesso ao órgão">Acesso ao órgão</option>
+                    <option value="contendo os usuários que possuem acesso à unidade">Acesso à unidade</option>
+                    <option value="contendo os usuários que iniciaram processos na unidade">Iniciaram processos na unidade</option>
+                    <option value="contendo histórico de acessos do usuário">Histórico de acessos do usuário</option>
+                </select>`;
+
+                // Campo Órgão
+                container.innerHTML += `<label id="label-dinamico">Órgão:</label>
+                <input type="text" class="input-text" id="input-2" list="lista-orgaos" oninput="updatePreview()">`;
+            } else {
                 
-                if(sys === 'sei' && ['criacao', 'lotacao', 'reabertura', 'desanexar'].includes(mod)) {
-                    const area = document.createElement('textarea');
-                    area.id = `input-${index}`;
-                    area.placeholder = "elis.asandra / SEC\tSEC - SECSINC / SEC\tBásico";
-                    area.oninput = updatePreview;
-                    container.appendChild(area);
-                } else {
-                    const input = document.createElement('input');
-                    input.className = 'input-text';
-                    input.id = `input-${index}`;
-                    input.oninput = updatePreview;
-                    container.appendChild(input);
-                }
-            });
+                config.inputs.forEach((labelTxt, index) => {
+                    const label = document.createElement('label');
+                    label.innerText = labelTxt + ":";
+                    container.appendChild(label);
+                    
+                    if(sys === 'sei' && ['criacao', 'lotacao', 'reabertura', 'desanexar'].includes(mod)) {
+                        const area = document.createElement('textarea');
+                        area.id = `input-${index}`;
+                        area.placeholder = "elis.asandra / SEC\tSEC - SECSINC / SEC\tBásico";
+                        area.oninput = updatePreview;
+                        container.appendChild(area);
+                    } else {
+                        const input = document.createElement('input');
+                        input.className = 'input-text';
+                        input.id = `input-${index}`;
+                        input.oninput = updatePreview;
+                        container.appendChild(input);
+                    }
+                });
+            }
         } else {
             document.getElementById('input-area').classList.add('hidden');
         }
         updatePreview();
+    }
+
+  
+    function toggleBDField() {
+        const tipo = document.getElementById('input-1').value;
+        const label = document.getElementById('label-dinamico');
+        const input = document.getElementById('input-2');
+
+        if (tipo.includes('órgão')) {
+            label.innerText = "Órgão:";
+            input.setAttribute('list', 'lista-orgaos');
+        } else if (tipo.includes('unidade')) {
+            label.innerText = "Unidade:";
+            input.removeAttribute('list');
+        } else {
+            label.innerText = "Usuário:";
+            input.removeAttribute('list');
+        }
     }
 
     function updatePreview() {
@@ -247,7 +370,10 @@
         const text = document.getElementById('preview').value;
         if(!text) return;
 
-        navigator.clipboard.writeText(text).then(() => {
+       
+        const textToCopy = text.split('\n').map(line => line === '' ? '⠀' : line).join('\n');
+
+        navigator.clipboard.writeText(textToCopy).then(() => {
             const status = document.getElementById('status');
             status.innerText = "Copiado com sucesso!";
             setTimeout(() => { status.innerText = ""; }, 2000);
@@ -267,5 +393,5 @@
 </script>
 
 </body>
-
+</html>
 </html>

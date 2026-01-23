@@ -226,11 +226,27 @@
 
     const database = {
         sei: {
-            criacao: { inputs: ['Dados do Usuário'], fn: (v) => `Prezado(a),\n\nUsuário(s) cadastrado(s) conforme solicitado.\n\n${v[0]}\nSenha: é a mesma de acesso ao webmail, internet.\n\nEstamos à disposição para quaisquer dúvidas ou informações adicionais.` },
-            lotacao: { inputs: ['Dados'], fn: (v) => `Prezado(a),\n\nSua solicitação foi atendida.\n${v[0]}\n\nEstamos à disposição para quaisquer dúvidas ou informações adicionais.` },
+            criacao: { 
+                inputs: ['Dados do Usuário'], 
+                placeholder: "Ex: elis.asandra / SEC\tSEC - SECSINC / SEC\tBásico",
+                fn: (v) => `Prezado(a),\n\nUsuário(s) cadastrado(s) conforme solicitado.\n\n${v[0]}\nSenha: é a mesma de acesso ao webmail, internet.\n\nEstamos à disposição para quaisquer dúvidas ou informações adicionais.` 
+            },
+            lotacao: { 
+                inputs: ['Dados'], 
+                placeholder: "Ex: elis.asandra / SEC\tSEC - SECSINC / SEC\tBásico",
+                fn: (v) => `Prezado(a),\n\nSua solicitação foi atendida.\n${v[0]}\n\nEstamos à disposição para quaisquer dúvidas ou informações adicionais.` 
+            },
             desligamento: { inputs: [], fn: () => `Prezado(a),\n\nSua solicitação foi atendida. As permissões de acesso SEI, expiram hoje, às 23h59.\n\nEstamos à disposição para quaisquer dúvidas ou informações adicionais.` },
-            reabertura: { inputs: ['Dados'], fn: (v) => `Prezado(a),\n\nPermissão de reabertura de processo concedida para o último usuário a finalizar o processo.\nPermissão ativa até o próximo dia útil às 23h59, caso o usuário não efetue a reabertura no prazo, por favor abrir outro chamado solicitando liberação novamente.\n\n${v[0]}\n\n1 - Sair do SEI e entrar novamente;\n2 - Pesquisar o processo informado;\n3 - Clicar no ícone "Reabrir processo" que está localizado ao lado do ícone de "anotações".` },
-            desanexar: { inputs: ['Dados'], fn: (v) => `Prezado(a),\n\nPermissão ativa até o próximo dia útil às 23h59, caso o usuário não efetue a desanexação no prazo, por favor abrir outro chamado solicitando liberação novamente.\n\n${v[0]}\n\nPROCEDIMENTOS PARA DESANEXAÇÃO:\n\n1 - Pesquisar o processo principal informado;\n2 - Clicar no processo anexado;\n3 - Clicar no ícone "desanexar processo" , que está localizado ao lado do ícone de "Ciência";\n4 - Expor o motivo e clicar em salvar.` },
+            reabertura: { 
+                inputs: ['Dados'], 
+                placeholder: "Ex: elis.asandra / SEC\tSEC - SECSINC / SEC\tReabreProcesso",
+                fn: (v) => `Prezado(a),\n\nPermissão de reabertura de processo concedida para o último usuário a finalizar o processo.\nPermissão ativa até o próximo dia útil às 23h59, caso o usuário não efetue a reabertura no prazo, por favor abrir outro chamado solicitando liberação novamente.\n\n${v[0]}\n\n1 - Sair do SEI e entrar novamente;\n2 - Pesquisar o processo informado;\n3 - Clicar no ícone "Reabrir processo" que está localizado ao lado do ícone de "anotações".` 
+            },
+            desanexar: { 
+                inputs: ['Dados'], 
+                placeholder: "Ex: elis.asandra / SEC\tSEC - SECSINC / SEC\tDesanexaProcesso",
+                fn: (v) => `Prezado(a),\n\nPermissão ativa até o próximo dia útil às 23h59, caso o usuário não efetue a desanexação no prazo, por favor abrir outro chamado solicitando liberação novamente.\n\n${v[0]}\n\nPROCEDIMENTOS PARA DESANEXAÇÃO:\n\n1 - Pesquisar o processo principal informado;\n2 - Clicar no processo anexado;\n3 - Clicar no ícone "desanexar processo" , que está localizado ao lado do ícone de "Ciência";\n4 - Expor o motivo e clicar em salvar.` 
+            },
             restrito: { inputs: [], fn: () => `Prezado(a),\n\nO processo informado encontra-se restrito. Por favor, anexar o print do andamento do processo para continuidade do atendimento.\n\nProcedimentos:\n1 - Consultar o processo\n2 - Clicar no botão “consultar andamento”` },
             sem_resposta: { inputs: [], fn: () => `Prezado(a),\n\nDevido à falta de retorno, estamos finalizando este chamado.\n\nCaso necessite prosseguir, por favor, faça uma nova solicitação.` },
             unidade: { inputs: [], fn: () => `Prezado(a),\n\nInformo que o(a) servidor(a) informado(a) já possui acesso com permissão de assinatura (Básico) em outra unidade.\n\nPara a concessão de assinatura em mais de um setor (unidade), é necessário anexar, no chamado, cópia da Portaria publicada no Diário Oficial, de forma explícita, citando “cumulativamente” ou “sem prejuízo das demais funções”.\n\nCaso não haja Portaria, recomendamos a utilização da funcionalidade “Bloco de Assinatura”, disponibilizada no SEI.\n\nPermanecemos à disposição para quaisquer esclarecimentos.` },
@@ -295,13 +311,10 @@
         if(config.inputs && config.inputs.length > 0) {
             document.getElementById('input-area').classList.remove('hidden');
             
-            
             if (mod === 'abertura_bd') {
-                // Campo Chamado
                 container.innerHTML += `<label>Chamado nº:</label>
                 <input type="text" class="input-text" id="input-0" oninput="updatePreview()">`;
 
-                // Campo Seleção
                 container.innerHTML += `<label>Tipo de Relatório:</label>
                 <select class="input-text" id="input-1" onchange="updatePreview(); toggleBDField()">
                     <option value="contendo os usuários que possuem acesso ao órgão">Acesso ao órgão</option>
@@ -310,11 +323,9 @@
                     <option value="contendo histórico de acessos do usuário">Histórico de acessos do usuário</option>
                 </select>`;
 
-                // Campo Órgão
                 container.innerHTML += `<label id="label-dinamico">Órgão:</label>
                 <input type="text" class="input-text" id="input-2" list="lista-orgaos" oninput="updatePreview()">`;
             } else {
-                
                 config.inputs.forEach((labelTxt, index) => {
                     const label = document.createElement('label');
                     label.innerText = labelTxt + ":";
@@ -323,7 +334,7 @@
                     if(sys === 'sei' && ['criacao', 'lotacao', 'reabertura', 'desanexar'].includes(mod)) {
                         const area = document.createElement('textarea');
                         area.id = `input-${index}`;
-                        area.placeholder = "elis.asandra / SEC\tSEC - SECSINC / SEC\tBásico";
+                        area.placeholder = config.placeholder || "Digite os dados...";
                         area.oninput = updatePreview;
                         container.appendChild(area);
                     } else {
@@ -341,7 +352,6 @@
         updatePreview();
     }
 
-  
     function toggleBDField() {
         const tipo = document.getElementById('input-1').value;
         const label = document.getElementById('label-dinamico');
@@ -369,10 +379,7 @@
     function copyText() {
         const text = document.getElementById('preview').value;
         if(!text) return;
-
-       
         const textToCopy = text.split('\n').map(line => line === '' ? '⠀' : line).join('\n');
-
         navigator.clipboard.writeText(textToCopy).then(() => {
             const status = document.getElementById('status');
             status.innerText = "Copiado com sucesso!";
@@ -390,8 +397,18 @@
         document.getElementById('status').innerText = "Campos limpos!";
         setTimeout(() => { document.getElementById('status').innerText = ""; }, 1500);
     }
+
+    //bloqueia o inspecionar
+    document.addEventListener('contextmenu', event => event.preventDefault());
+    document.onkeydown = function(e) {
+        if (e.keyCode == 123 || 
+            (e.ctrlKey && e.shiftKey && e.keyCode == 73) || 
+            (e.ctrlKey && e.shiftKey && e.keyCode == 74) || 
+            (e.ctrlKey && e.keyCode == 85)) {
+            return false;
+        }
+    };
 </script>
 
 </body>
-</html>
 </html>

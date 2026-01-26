@@ -129,7 +129,7 @@
         </div>
 
         <div id="grp-models" class="model-selector hidden">
-            <div class="empty-msg">Nenhum modelo cadastrado para o GRP ainda.</div>
+            <button class="model-btn" onclick="selectModel('grp', 'criacao_acesso')">Criação de Acesso GRP</button>
         </div>
 
         <div id="utilidades-models" class="model-selector hidden">
@@ -291,7 +291,13 @@
             criacao_email: { inputs: ['Login', 'Senha Provisória'], fn: (v) => `Prezado(a),\n\nUsuário(s) cadastrado(s) conforme solicitado.\n\nLogin: ${v[0]}\nSenha Provisória: ${v[1]}\nO servidor(a) deve acessar o minhaconta.ac.gov.br\nUsar a senha provisória de forma escrita (não copiar e colar)\n\nEstamos à disposição para quaisquer dúvidas ou informações adicionais.` },
             reset_senha: { inputs: ['Senha Provisória'], fn: (v) => `Prezado(a),\n\nSenha do servidor(a) redefinida!\nO servidor(a) deve acessar o minhaconta.ac.gov.br\nUsar a senha provisória de forma escrita (não copiar e colar): ${v[0]}` }
         },
-        grp: {},
+        grp: {
+            criacao_acesso: { 
+                inputs: ['Usuário'], 
+                placeholder: "Ex: 40028922 - Bota a Capa Abuuh",
+                fn: (v) => `Prezado(a),\nSua solicitação foi atendida.\n\nUsuário: ${v[0]}\nSenha: 123\n\nFicamos à disposição para quaisquer esclarecimentos.`
+            }
+        },
         utilidades: {}
     };
 
@@ -364,6 +370,7 @@
                         const input = document.createElement('input');
                         input.className = 'input-text';
                         input.id = `input-${index}`;
+                        input.placeholder = config.placeholder || "";
                         input.oninput = updatePreview;
                         container.appendChild(input);
                     }
@@ -435,4 +442,3 @@
 
 </body>
 </html>
-

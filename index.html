@@ -299,7 +299,7 @@
             criacao_acesso: { 
                 inputs: ['Usuário'], 
                 placeholder: "Ex: 40028922 - Bota a Capa Abuuh",
-                fn: (v) => `Prezado(a),\nSua solicitação foi atendida.\n\nUsuário: ${v[0]}\nSenha: 123\n\nFicamos à disposição para quaisquer esclarecimentos.`
+                fn: (v) => `Prezado(a),\nSua solicitação foi atendida.\n\nUsuário(s): \n${v[0]}\nSenha: 123\n\nFicamos à disposição para quaisquer esclarecimentos.`
             }
         },
         utilidades: {}
@@ -374,7 +374,7 @@
                     const label = document.createElement('label');
                     label.innerText = labelTxt + ":";
                     container.appendChild(label);
-                    if(sys === 'sei' && ['criacao', 'lotacao', 'reabertura', 'desanexar'].includes(mod)) {
+                    if((sys === 'sei' && ['criacao', 'lotacao', 'reabertura', 'desanexar'].includes(mod)) || (sys === 'grp' && mod === 'criacao_acesso')) {
                         const area = document.createElement('textarea');
                         area.id = `input-${index}`;
                         area.placeholder = config.placeholder || "Digite os dados...";

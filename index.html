@@ -82,10 +82,12 @@
         
         .hidden { display: none; }
         #status { color: var(--success); font-weight: bold; text-align: center; margin-top: 10px; height: 1.2rem; }
-        .empty-msg { color: #95a5a6; font-style: italic; text-align: center; padding: 20px; grid-column: 1 / -1; }
+
+        /* BLOCO DE NOTAS */
+        #notes-area { width: 100%; height: 450px; font-size: 1rem; padding: 15px; border-radius: 8px; border: 1px solid #ccc; font-family: inherit; }
     </style>
 </head>
-<body onload="checkLoginState()">
+<body onload="checkLoginState(); loadNotes();">
 
 <div id="login-overlay">
     <div class="login-box">
@@ -102,7 +104,10 @@
     <button class="tab-btn" id="btn-eturmalina" onclick="showSystem('eturmalina')">e-Turmalina</button>
     <button class="tab-btn" id="btn-integracao" onclick="showSystem('integracao')">Integração</button>
     <button class="tab-btn" id="btn-grp" onclick="showSystem('grp')">GRP</button>
+	<button class="tab-btn" id="btn-vpn" onclick="showSystem('vpn')">VPN</button>
+    <button class="tab-btn" id="btn-documentos" onclick="showSystem('documentos')">Documentos</button>
     <button class="tab-btn" id="btn-utilidades" onclick="showSystem('utilidades')">Utilidades</button>
+    <button class="tab-btn" id="btn-notas" onclick="showSystem('notas')">Bloco de Notas</button>
 </nav>
 
 <main>
@@ -138,6 +143,18 @@
             <button class="model-btn" onclick="selectModel('grp', 'criacao_acesso')">Criação de Acesso/Reset</button>
         </div>
 
+		<div id="vpn-models" class="model-selector hidden">
+   			 <button class="model-btn" onclick="selectModel('vpn', 'acesso_vpn')">Criação de VPN</button>
+   				 <a href="documentos1/configurar_vpn.pdf" download target="_blank" class="model-btn" style="border: 2px solid #1a252f; font-weight: bold;">📥 Baixar Manual VPN</a>
+			</div>
+
+        <div id="documentos-models" class="model-selector hidden">
+            <a href="documentos/configurar_vpn.pdf" download="configurar_vpn.pdf" class="model-btn">Configurar VPN (PDF)</a>
+            <a href="documentos/instrução_normativa_conjunta_cge.pdf" download="instrução_normativa_conjunta_cge.pdf" class="model-btn">Instrução Normativa SEI</a>
+            <a href="documentos/planilha_cadastro_sei.xlsx" download="planilha_cadastro_sei.xlsx" class="model-btn">Planilha Cadastro SEI</a>
+            <a href="documentos/respostas_padrao_word.docx" download="respostas_padrao_word.docx" class="model-btn">Respostas Padrão (Word)</a>
+        </div>
+
         <div id="utilidades-models" class="model-selector hidden">
             <div class="model-btn" onclick="toggleLink(this)">Letras Maiúsculas <div class="link-options"><a href="https://isaiaschaves.github.io/site_letras_maiusculas/" target="_blank" class="opt-btn">Acessar</a><button onclick="copyLink('https://isaiaschaves.github.io/site_letras_maiusculas/')" class="opt-btn">Copiar</button></div></div>
             <div class="model-btn" onclick="toggleLink(this)">Diário Oficial <div class="link-options"><a href="https://diario.ac.gov.br/" target="_blank" class="opt-btn">Acessar</a><button onclick="copyLink('https://diario.ac.gov.br/')" class="opt-btn">Copiar</button></div></div>
@@ -157,18 +174,24 @@
             <div class="model-btn" onclick="toggleLink(this)">e-Social <div class="link-options"><a href="https://sigrh.ac.gov.br/esocial/" target="_blank" class="opt-btn">Acessar</a><button onclick="copyLink('https://sigrh.ac.gov.br/esocial/')" class="opt-btn">Copiar</button></div></div>
         </div>
 
-        <div id="input-area" class="input-group hidden">
-            <div id="fields-container"></div>
+        <div id="notas-models" class="hidden">
+            <textarea id="notes-area" oninput="saveNotes()" placeholder="Qualquer biruliro escrito aqui ficará salvo até você limpar o cache do navegador."></textarea>
         </div>
 
-        <label>Visualização da Resposta (Editável):</label>
-        <textarea class="preview-area" id="preview" placeholder="Selecione um modelo acima..."></textarea>
-        
-        <div id="status"></div>
-        
-        <div class="action-group">
-            <button class="copy-btn" onclick="copyText()">COPIAR RESPOSTA</button>
-            <button class="clear-btn" onclick="clearAll()">LIMPAR CAMPOS</button>
+        <div id="workspace-area">
+            <div id="input-area" class="input-group hidden">
+                <div id="fields-container"></div>
+            </div>
+
+            <label>Visualização da Resposta (Editável):</label>
+            <textarea class="preview-area" id="preview" placeholder="Selecione um modelo acima..."></textarea>
+            
+            <div id="status"></div>
+            
+            <div class="action-group">
+                <button class="copy-btn" onclick="copyText()">COPIAR RESPOSTA</button>
+                <button class="clear-btn" onclick="clearAll()">LIMPAR CAMPOS</button>
+            </div>
         </div>
     </div>
 </main>
@@ -216,7 +239,7 @@
     <option value="JUCEAC - JUNTA COMERCIAL DO ESTADO DO ACRE">
     <option value="PCAC - POLICIA CIVIL DO ESTADO DO ACRE">
     <option value="PGE - PROCURADORIA-GERAL DO ESTADO DO ACRE">
-    <option value="PMAC - POLÍCIA MILITAR">
+    <option value=" PMAC - POLÍCIA MILITAR">
     <option value="PROCON - INSTITUTO DE PROTEÇÃO E DEFESA DO CONSUMIDOR DO ACRE">
     <option value="REPAC - REPRESENTAÇÃO DO GOVERNO EM BRASÍLIA">
     <option value="SANACRE - COMPANHIA DE SANEAMENTO DO ESTADO DO ACRE">
@@ -301,8 +324,14 @@
                 placeholder: "Ex: quarenta e lá vai pancada",
                 fn: (v) => `Prezado(a),\nSua solicitação foi atendida.\n\nUsuário(s): \n${v[0]}\nSenha: 123\n\nFicamos à disposição para quaisquer esclarecimentos.`
             }
-        },
-        utilidades: {}
+        }, 
+        vpn: {
+            acesso_vpn: { 
+                inputs: ['Usuário'], 
+                fn: (v) => `Prezado(a),\n\nCriado o acesso a VPN conforme o solicitado.\n\nUsuário: ${v[0]}\nSenha: Mesma utilizada no SEI, webmail e internet.\n\nSiga as orientações do manual em anexo para a configuração.` 
+            }
+        } 
+        
     };
 
     function checkPass() {
@@ -337,18 +366,37 @@
     function showSystem(sys) {
         currentSystem = sys;
         currentModel = '';
-        const titles = { sei: 'Sistema SEI', eturmalina: 'e-Turmalina', integracao: 'Integração', grp: 'GRP', utilidades: 'Utilidades e Links Importantes' };
+        const titles = { 
+            sei: 'SEI - Sistema Eletrônico de Informações', 
+            eturmalina: 'e-Turmalina', 
+            integracao: 'Integração', 
+            grp: 'GRP', 
+            vpn: 'VPN - Acesso Remoto',
+            documentos: 'Documentos e Modelos',
+            utilidades: 'Utilidades e Links Importantes',
+            notas: 'Bloco de Notas Pessoal'
+        };
         document.getElementById('system-title').innerText = titles[sys];
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         document.getElementById(`btn-${sys}`).classList.add('active');
-        document.querySelectorAll('.model-selector').forEach(div => div.classList.add('hidden'));
-        document.getElementById(`${sys}-models`).classList.remove('hidden');
+        
+        document.querySelectorAll('.model-selector, #notas-models').forEach(div => div.classList.add('hidden'));
+        const target = document.getElementById(`${sys}-models`);
+        if(target) target.classList.remove('hidden');
+
+        const workspace = document.getElementById('workspace-area');
+        if (['notas', 'documentos', 'utilidades'].includes(sys)) {
+            workspace.classList.add('hidden');
+        } else {
+            workspace.classList.remove('hidden');
+        }
+
         document.getElementById('input-area').classList.add('hidden');
         document.getElementById('preview').value = "";
     }
 
     function selectModel(sys, mod) {
-        if (sys === 'utilidades') return;
+        if (['utilidades', 'documentos', 'notas'].includes(sys)) return;
         currentModel = mod;
         const config = database[sys][mod];
         document.querySelectorAll('.model-btn').forEach(b => b.classList.remove('active'));
@@ -428,14 +476,17 @@
             if(el) el.value = '';
         });
         updatePreview();
-        document.getElementById('status').innerText = "Campos limpos!";
-        setTimeout(() => { document.getElementById('status').innerText = ""; }, 1500);
-    
+    }
 
-    };
+    /* BLOCO DE NOTAS */
+    function saveNotes() {
+        localStorage.setItem('rascunho_notas', document.getElementById('notes-area').value);
+    }
+    function loadNotes() {
+        const saved = localStorage.getItem('rascunho_notas');
+        if(saved) document.getElementById('notes-area').value = saved;
+    }
 </script>
-
 </body>
+
 </html>
-
-

@@ -28,6 +28,41 @@ const SENHA_CORRETA = "suporte123";
             label.textContent = 'Modo Escuro';
         }
     }
+
+    /* ===================== MENU MOBILE ===================== */
+    function toggleMenu() {
+        const nav = document.querySelector('nav');
+        const overlay = document.getElementById('menu-overlay');
+        const isOpen = nav.classList.contains('open');
+        
+        if(isOpen) {
+            closeMenu();
+        } else {
+            nav.classList.add('open');
+            overlay.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    function closeMenu() {
+        const nav = document.querySelector('nav');
+        const overlay = document.getElementById('menu-overlay');
+        nav.classList.remove('open');
+        overlay.classList.remove('open');
+        document.body.style.overflow = '';
+    }
+
+    // Fechar menu ao clicar em um botão
+    document.addEventListener('DOMContentLoaded', function() {
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                // Aguarda o showSystem ser executado (onclick do HTML)
+                // antes de fechar o menu
+                setTimeout(closeMenu, 100);
+            });
+        });
+    });
     /* ======================================================== */
 
     const database = {
@@ -95,7 +130,14 @@ const SENHA_CORRETA = "suporte123";
             criacao_compras: { 
                 inputs: ['Usuário'], 
                 placeholder: "Ex: que mal lhe pergunte",
-                fn: (v) => `Prezado(a),\n\nCriado o acesso ao Sistema de Compras conforme o solicitado.\n\nUsuário: ${v[0]}\nSenha: Mesma utilizada no SEI, webmail e internet.\n\nSiga as orientações do manual em anexo para a configuração.` 
+                checkboxes: ['Solicitante', 'Servidor', 'Gestor de Compras', 'Ordenador', 'Juridico de Compras', 'Controle Interno', 'Financeiro', 'SEPLAN'],
+                fn: (v, checkedTypes) => {
+                    let tiposTexto = '';
+                    if(checkedTypes && checkedTypes.length > 0) {
+                        tiposTexto = '\n\nTipos de cadastro criados:\n' + checkedTypes.map(tipo => '• ' + tipo).join('\n');
+                    }
+                    return `Prezado(a),\n\nCriado o acesso ao Sistema de Compras conforme o solicitado.\n\nUsuário: ${v[0]}\nSenha: Mesma utilizada no SEI, webmail e internet.${tiposTexto}\n\nSiga as orientações do manual em anexo para a configuração.`;
+                }
             },
             solicitacao: { 
                 inputs: ['Usuário'], 
@@ -168,6 +210,16 @@ const SENHA_CORRETA = "suporte123";
 
         document.getElementById('input-area').classList.add('hidden');
         document.getElementById('preview').value = "";
+
+        // Auto-seleciona o primeiro modelo do sistema
+        if (!['notas', 'documentos', 'utilidades'].includes(sys)) {
+            setTimeout(() => {
+                const firstModelBtn = document.querySelector(`#${sys}-models .model-btn`);
+                if (firstModelBtn) {
+                    firstModelBtn.click();
+                }
+            }, 0);
+        }
     }
 
     function selectModel(sys, mod) {
@@ -213,7 +265,45 @@ const SENHA_CORRETA = "suporte123";
                     }
                 });
             }
-        } else { document.getElementById('input-area').classList.add('hidden'); }
+        } else if(!config.checkboxes || config.checkboxes.length === 0) { 
+            document.getElementById('input-area').classList.add('hidden'); 
+        } else {
+            document.getElementById('input-area').classList.remove('hidden');
+        }
+        
+        // Adicionar checkboxes se existirem
+        if(config.checkboxes && config.checkboxes.length > 0) {
+            const checkboxLabel = document.createElement('label');
+            checkboxLabel.innerText = "Tipos de Cadastro:";
+            checkboxLabel.style.marginTop = "15px";
+            checkboxLabel.style.fontWeight = "bold";
+            container.appendChild(checkboxLabel);
+            
+            const checkboxContainer = document.createElement('div');
+            checkboxContainer.className = 'checkboxes-group';
+            
+            config.checkboxes.forEach((tipo, idx) => {
+                const checkboxDiv = document.createElement('div');
+                checkboxDiv.className = 'checkbox-item';
+                
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.id = `checkbox-${idx}`;
+                checkbox.className = 'tipo-checkbox';
+                checkbox.onchange = updatePreview;
+                
+                const checkboxLabel = document.createElement('label');
+                checkboxLabel.htmlFor = `checkbox-${idx}`;
+                checkboxLabel.innerText = tipo;
+                
+                checkboxDiv.appendChild(checkbox);
+                checkboxDiv.appendChild(checkboxLabel);
+                checkboxContainer.appendChild(checkboxDiv);
+            });
+            
+            container.appendChild(checkboxContainer);
+        }
+        
         updatePreview();
     }
 
@@ -230,7 +320,19 @@ const SENHA_CORRETA = "suporte123";
         if(!currentModel) return;
         const config = database[currentSystem][currentModel];
         const values = config.inputs.map((_, i) => document.getElementById(`input-${i}`).value || "____");
-        document.getElementById('preview').value = config.fn(values);
+        
+        // Coletar checkboxes marcados
+        let checkedTypes = [];
+        if(config.checkboxes) {
+            config.checkboxes.forEach((_, idx) => {
+                const checkbox = document.getElementById(`checkbox-${idx}`);
+                if(checkbox && checkbox.checked) {
+                    checkedTypes.push(config.checkboxes[idx]);
+                }
+            });
+        }
+        
+        document.getElementById('preview').value = config.fn(values, checkedTypes);
     }
 
     function copyText() {
@@ -246,10 +348,18 @@ const SENHA_CORRETA = "suporte123";
 
     function clearAll() {
         if(!currentModel) return;
-        database[currentSystem][currentModel].inputs.forEach((_, i) => {
+        const config = database[currentSystem][currentModel];
+        config.inputs.forEach((_, i) => {
             const el = document.getElementById(`input-${i}`);
             if(el) el.value = '';
         });
+        // Desmarcar checkboxes
+        if(config.checkboxes) {
+            config.checkboxes.forEach((_, i) => {
+                const checkbox = document.getElementById(`checkbox-${i}`);
+                if(checkbox) checkbox.checked = false;
+            });
+        }
         updatePreview();
     }
 

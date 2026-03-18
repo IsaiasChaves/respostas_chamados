@@ -10,11 +10,19 @@
 </head>
 <body onload="checkLoginState(); loadNotes(); applyTheme();">
 
+<!-- BOTÃO MENU HAMBÚRGUER - MOBILE -->
+<button id="menu-toggle" class="mobile-menu-btn" onclick="toggleMenu()" title="Abrir menu">
+    <span class="hamburger">☰</span>
+</button>
+
 <!-- BOTÃO MODO NOTURNO -->
 <button id="theme-toggle" onclick="toggleTheme()" title="Alternar tema">
     <span class="icon" id="theme-icon">🌙</span>
     <span class="label-text" id="theme-label">Modo Escuro</span>
 </button>
+
+<!-- OVERLAY PARA FECHAR MENU -->
+<div id="menu-overlay" onclick="closeMenu()"></div>
 
 <div id="login-overlay">
     <div class="login-box">
@@ -79,7 +87,7 @@
 
         <div id="compras-models" class="model-selector hidden">
             <button class="model-btn" onclick="selectModel('compras', 'criacao_compras')">Criação de Acesso</button>
-            <button class="model-btn" onclick="selectModel('compras', 'solicitacao')">Solicitação atendida</button>
+            <button class="model-btn" onclick="selectModel('compras', 'solicitacao')">Solicitação Atendida</button>
             <button class="model-btn" onclick="selectModel('compras', 'criacao_compras')">Criação de Acesso</button>
         </div>
 
@@ -90,6 +98,7 @@
             <a href="documentos/respostas_padrao_word.docx" download="respostas_padrao_word.docx" class="model-btn">Respostas Padrão (Word)</a>
 			<a href="documentos/modelo_depara.xlsx" download="modelo_depara.xlsx" class="model-btn">Modelo DePara (XLSX)</a>
 			<a href="documentos/modelo_preenchimento.pdf" download="modelo_preenchimento.pdf" class="model-btn">Instruções DePara (PDF)</a>
+            <a href="documentos/norma_compras.pdf" download="norma_compras.pdf" class="model-btn">Normas Compras (PDF)</a>
         </div>
 
         <div id="utilidades-models" class="model-selector hidden">

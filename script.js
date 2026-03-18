@@ -130,7 +130,7 @@ const SENHA_CORRETA = "suporte123";
             criacao_compras: { 
                 inputs: ['Usuário'], 
                 placeholder: "Ex: que mal lhe pergunte",
-                checkboxes: ['Solicitante', 'Servidor', 'Gestor de Compras', 'Ordenador', 'Juridico de Compras', 'Controle Interno', 'Financeiro', 'SEPLAN'],
+                checkboxes: ['Solicitante', 'Servidor', 'Gestor de Compras', 'Ordenador', 'Jurídico de Compras', 'Controle Interno', 'Financeiro', 'SEPLAN'],
                 fn: (v, checkedTypes) => {
                     let tiposTexto = '';
                     if(checkedTypes && checkedTypes.length > 0) {

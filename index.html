@@ -62,12 +62,18 @@
             <button class="model-btn" onclick="selectModel('sei', 'planilha')">Pedir Planilha</button>
             <button class="model-btn" onclick="selectModel('sei', 'abertura_bd')">Abertura Demanda BD</button>
             <button class="model-btn" onclick="selectModel('sei', 'demanda_user')">Abertura Demanda/User</button>
-			<button class="model-btn" onclick="selectModel('sei', 'solicitacao')">Solicitação Atendida</button>
+            <div class="submenu-wrapper">
+                <button class="model-btn" onclick="selectModel('sei', 'solicitacao')">Solicitação Atendida</button>
+                <button type="button" class="sub-arrow-btn" onclick="toggleSubmenu(event, 'sei-solicitacao-sub')">▾</button>
+            </div>
+            <button id="sei-solicitacao-sub" class="model-btn submenu submenu-item hidden" onclick="selectModel('sei', 'criacao_estrutura')">Criação Estrutura</button>
+            <button id="sei-assinatura-terceirizados" class="model-btn submenu submenu-item hidden" onclick="selectModel('sei', 'assinatura_terceirizados')">Assinatura Terceirizados</button>
         </div>
 		
         <div id="eturmalina-models" class="model-selector hidden">
             <button class="model-btn" onclick="selectModel('eturmalina', 'criacao_acesso')">Criação de Acesso</button>
             <button class="model-btn" onclick="selectModel('eturmalina', 'reset_senha')">Reset de Senha</button>
+            <button class="model-btn" onclick="selectModel('eturmalina', 'reset_autorizacao')">Reset Autorização</button>
             <button class="model-btn" onclick="selectModel('eturmalina', 'abaco')">Chamado Ábaco</button>
         </div>
 

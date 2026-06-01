@@ -52,6 +52,14 @@ const SENHA_CORRETA = "suporte123";
         document.body.style.overflow = '';
     }
 
+    function toggleSubmenu(event, submenuId) {
+        event.stopPropagation();
+        const submenu = document.getElementById(submenuId);
+        if (!submenu) return;
+        const submenuItems = document.querySelectorAll('.submenu-item');
+        submenuItems.forEach(item => item.classList.toggle('hidden'));
+    }
+
     // Fechar menu ao clicar em um botão
     document.addEventListener('DOMContentLoaded', function() {
         const tabBtns = document.querySelectorAll('.tab-btn');
@@ -92,6 +100,16 @@ const SENHA_CORRETA = "suporte123";
             sem_resposta: { inputs: [], fn: () => `Prezado(a),\n\nDevido à falta de retorno, estamos finalizando este chamado.\n\nCaso necessite prosseguir, por favor, faça uma nova solicitação.` },
 			solicitacao: { inputs: [], fn: () => `Prezado(a),\n\nSua solicitação foi atendida.\n\nEstamos à disposição para quaisquer dúvidas ou informações adicionais.`  
             },
+            criacao_estrutura: { inputs: [], fn: () => `Prezado(a),\n\nPara a criação, alteração ou atualização de estruturas/unidades nos sistemas GRP, eTurmalina e SEI, faz-se necessário o encaminhamento de um processo SEI para a unidade ITAC/PRES, contendo a seguinte documentação:\n\nOfício de solicitação;\nDecreto, Portaria ou Ata que formalize a alteração;\nOrganograma visual da estrutura (quando disponível);\nPlanilha de atualização da estrutura organizacional devidamente preenchida.\n\nApós o recebimento da documentação completa, a solicitação será analisada e encaminhada para as providências cabíveis.\n\nPermanecemos à disposição para eventuais esclarecimentos.` },
+            assinatura_terceirizados: { inputs: [], fn: () => `Prezado(a),
+
+Verificamos que o(a) servidor(a) mencionado(a) possui cadastro ativo na condição de terceirizado(a).
+
+Informamos que, conforme as regras de acesso vigentes, apenas servidores efetivos e ocupantes de cargos comissionados podem ser vinculados a unidades com permissão para assinatura de documentos.
+
+Caso haja necessidade de conceder acesso à unidade em questão sem a permissão de assinatura, solicitamos a gentileza de nos informar para que possamos adotar as providências necessárias.
+
+Permanecemos à disposição para quaisquer esclarecimentos adicionais.` },
             unidade: { inputs: [], fn: () => `Prezado(a),\n\nInformo que o(a) servidor(a) informado(a) já possui acesso com permissão de assinatura (Básico) em outra unidade.\n\nPara a concessão de assinatura em mais de um setor (unidade), é necessário anexar, no chamado, cópia da Portaria publicada no Diário Oficial, de forma explícita, citando "cumulativamente" ou "sem prejuízo das demais funções".\n\nCaso não haja Portaria, recomendamos a utilização da funcionalidade "Bloco de Assinatura", disponibilizada no SEI.\n\nPermanecemos à disposição para quaisquer esclarecimentos.` },
             planilha: { inputs: [], fn: () => `Prezado(a),\n\nPara cadastro e acesso ao SEI, é necessário anexar a planilha de cadastro devidamente preenchida com os dados do(a) servidor(a).` },
             abertura_bd: { 
@@ -106,11 +124,16 @@ const SENHA_CORRETA = "suporte123";
         eturmalina: {
             criacao_acesso: { inputs: [], fn: () => `Prezado(a),\n\nO acesso ao sistema eTurmalina foi concedido.\n\nUsuário: CPF do servidor\nSenha: CPF do servidor\n\nO próprio sistema orientará o usuário quanto à troca de senha no primeiro acesso.\n\nLink de acesso: https://sigrh.ac.gov.br/eturmalina` },
             reset_senha: { inputs: [], fn: () => `Prezado(a),\n\nInformo que foi realizado o reset de senha do acesso ao sistema eTurmalina.\n\nUsuário: CPF do servidor\nSenha: CPF do servidor\n\nO próprio sistema orientará o usuário quanto à troca de senha no primeiro acesso após o reset.\nLink de acesso: https://sigrh.ac.gov.br/eturmalina` },
+            reset_autorizacao: { inputs: [], fn: () => `Prezado(a),
+
+Solicito, por gentileza, autorização para a realização de uma nova redefinição de senha, a fim de possibilitar a execução de testes de acesso e a verificação do funcionamento da conta.
+
+Permaneço à disposição para quaisquer esclarecimentos.` },
             abaco: { inputs: ['Número do Chamado'], fn: (v) => `Prezado(a),\n\nInformo que foi aberto chamado junto à empresa Ábaco (${v[0]}). Assim que obtivermos um retorno, entraremos em contato.` }
         },
         integracao: {
-            criacao_email: { inputs: ['Login', 'Senha Provisória'], fn: (v) => `Prezado(a),\n\nUsuário(s) cadastrado(s) conforme solicitado.\n\nLogin: ${v[0]}\nSenha Provisória: ${v[1]}\nO servidor(a) deve acessar o https://minhaconta.ac.gov.br/\nUsar a senha provisória de forma escrita (não copiar e colar)\n\nEstamos à disposição para quaisquer dúvidas ou informações adicionais.` },
-            reset_senha: { inputs: ['Senha Provisória'], fn: (v) => `Prezado(a),\n\nSenha do servidor(a) redefinida!\nO servidor(a) deve acessar o https://minhaconta.ac.gov.br/\nUsar a senha provisória de forma escrita (não copiar e colar): ${v[0]}` },
+            criacao_email: { inputs: ['Login', 'Senha Provisória'], fn: (v) => `Prezado(a),\n\nUsuário(s) cadastrado(s) conforme solicitado.\n\nLogin: ${v[0]}\nSenha Provisória: ${v[1]}\nO servidor(a) deve acessar o https://minhaconta.ac.gov.br/ para realizar a alteração de sua senha.\nUsar a senha provisória de forma escrita (não copiar e colar)\n\nEstamos à disposição para quaisquer dúvidas ou informações adicionais.` },
+            reset_senha: { inputs: ['Usuário', 'Senha Provisória'], fn: (v) => `Prezado(a),\n\nSenha do servidor(a) redefinida!\nUsuário: ${v[0]}\nUsar a senha provisória de forma escrita (não copiar e colar): ${v[1]}\nO servidor(a) deve acessar o https://minhaconta.ac.gov.br/ para realizar a alteração de sua senha.` },
             alteracao_nivel: { inputs: ['Usuário'], fn: (v) => `Prezado(a),\n\nInformamos que a alteração do nível de acesso foi devidamente processada e concluída.\nUsuário: ${v[0]}\n\nAproveitamos a oportunidade para reforçar as diretrizes de segurança da informação quanto ao uso de ferramentas de terceiros para fins institucionais:\n\n- Monitoramento e Privacidade: A autorização de sessões em navegadores expõe o conteúdo das mensagens a softwares instalados na máquina. Caso o computador esteja comprometido por malwares (softwares espiões), as conversas podem ser armazenadas sem a necessidade de interação do usuário.\n\n- Encerramento de Sessões: Ressaltamos que o fechamento do navegador não encerra a sessão do WhatsApp Web. É obrigatório que o usuário finalize a conexão através das configurações do aplicativo no celular para evitar que terceiros acessem a conta indevidamente.` }
         },
         grp: {

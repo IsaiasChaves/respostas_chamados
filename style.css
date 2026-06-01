@@ -198,6 +198,21 @@
         .model-btn:hover { border-color: var(--accent); background: #f0f7ff; }
         [data-theme="dark"] .model-btn:hover { background: #1e3a50; }
         .model-btn.active { background: var(--accent); color: white; border-color: var(--accent); box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3); }
+        .model-btn.has-submenu { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+        .model-btn .sub-arrow { font-size: 0.95rem; opacity: 0.7; cursor: pointer; user-select: none; }
+        .model-btn .sub-arrow:hover { opacity: 1; }
+        .model-btn.submenu { padding-top: 10px; padding-bottom: 10px; font-size: 0.82rem; }
+
+        /* Wrapper to keep main button and small arrow together as one grid item */
+        .submenu-wrapper { display: flex; gap: 8px; align-items: stretch; }
+        .submenu-wrapper .model-btn { flex: 1; height: 100%; }
+        .sub-arrow-btn {
+            width: 44px; min-width: 44px; height: 50px; border: 1px solid var(--model-btn-border);
+            border-radius: 6px; background: var(--model-btn-bg); color: var(--model-btn-text);
+            cursor: pointer; font-size: 1.05rem; display: inline-flex; align-items: center; justify-content: center;
+        }
+        .sub-arrow-btn:hover { border-color: var(--accent); background: #f0f7ff; }
+        [data-theme="dark"] .sub-arrow-btn:hover { background: #1e3a50; }
 
         /* ESTILO PARA OPÇÕES DE LINKS */
         .link-options { display: none; position: absolute; bottom: -45px; left: 0; right: 0; background: var(--link-options-bg); border-radius: 4px; padding: 5px; z-index: 10; gap: 5px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }

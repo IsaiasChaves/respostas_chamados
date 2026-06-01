@@ -129,6 +129,7 @@ Permanecemos à disposição para quaisquer esclarecimentos adicionais.` },
 Solicito, por gentileza, autorização para a realização de uma nova redefinição de senha, a fim de possibilitar a execução de testes de acesso e a verificação do funcionamento da conta.
 
 Permaneço à disposição para quaisquer esclarecimentos.` },
+            acesso_contracheque: { inputs: ['Usuário', 'Senha'], fn: (v) => `Prezado(a),\n\nInformamos que sua solicitação foi atendida e o acesso ao sistema de Contracheque foi restabelecido.\n\nDados de acesso:\n\nUsuário: ${v[0]}\nSenha provisória: ${v[1]}\n\nImportante: A senha provisória deve ser digitada manualmente. Recomendamos não utilizar os recursos de copiar e colar durante o primeiro acesso.\n\nApós o login, o(a) servidor(a) deverá acessar o portal (https://minhaconta.ac.gov.br/) para realizar a alteração da senha provisória e definir uma nova senha de sua preferência.\n\nEm caso de dúvidas ou necessidade de suporte adicional, permanecemos à disposição.` },
             abaco: { inputs: ['Número do Chamado'], fn: (v) => `Prezado(a),\n\nInformo que foi aberto chamado junto à empresa Ábaco (${v[0]}). Assim que obtivermos um retorno, entraremos em contato.` }
         },
         integracao: {

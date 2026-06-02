@@ -126,6 +126,27 @@ Ressalta-se que o servidor designado deverá ocupar cargo efetivo ou Cargo em Co
 Após o encaminhamento da documentação pertinente, a solicitação será analisada para as providências cabíveis.
 
 Permanecemos à disposição para quaisquer esclarecimentos adicionais.` },
+            criacao_documento: { inputs: [], fn: () => `Prezado(a),
+
+Informamos que a criação de novos Tipos de Documento no SEI deve observar os padrões e diretrizes da Redação Oficial e da padronização documental institucional.
+
+Esclarecemos que documentos oficiais já existentes no sistema, tais como Ofício, Despacho, Memorando e demais expedientes administrativos, não se caracterizam como modelos passíveis de criação como novos Tipos de Documento, uma vez que possuem estrutura, finalidade e formatação padronizadas conforme as normas de comunicação oficial vigentes.
+
+A criação de novos Tipos de Documento é recomendada apenas para documentos específicos que demandem estrutura própria e padronização diferenciada, tais como:
+
+Formulários;
+Requerimentos específicos;
+Fichas;
+Checklists;
+Termos;
+Declarações;
+Outros documentos operacionais com características próprias.
+
+Destacamos, ainda, que muitos documentos de uso recorrente podem ser padronizados pelos próprios usuários por meio da funcionalidade Texto Padrão do SEI, proporcionando maior agilidade, uniformidade e eficiência na elaboração dos documentos institucionais, sem a necessidade de criação de novos tipos documentais.
+
+Por fim, informamos que todas as solicitações de criação de novos Tipos de Documento serão analisadas quanto à sua finalidade, necessidade institucional, aderência às normas vigentes e conformidade com as diretrizes da Redação Oficial.
+
+Permanecemos à disposição para eventuais esclarecimentos.` },
             unidade: { inputs: [], fn: () => `Prezado(a),\n\nInformo que o(a) servidor(a) informado(a) já possui acesso com permissão de assinatura (Básico) em outra unidade.\n\nPara a concessão de assinatura em mais de um setor (unidade), é necessário anexar, no chamado, cópia da Portaria publicada no Diário Oficial, de forma explícita, citando "cumulativamente" ou "sem prejuízo das demais funções".\n\nCaso não haja Portaria, recomendamos a utilização da funcionalidade "Bloco de Assinatura", disponibilizada no SEI.\n\nPermanecemos à disposição para quaisquer esclarecimentos.` },
             planilha: { inputs: [], fn: () => `Prezado(a),\n\nPara cadastro e acesso ao SEI, é necessário anexar a planilha de cadastro devidamente preenchida com os dados do(a) servidor(a).` },
             abertura_bd: { 

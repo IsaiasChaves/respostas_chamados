@@ -110,6 +110,22 @@ Informamos que, conforme as regras de acesso vigentes, apenas servidores efetivo
 Caso haja necessidade de conceder acesso à unidade em questão sem a permissão de assinatura, solicitamos a gentileza de nos informar para que possamos adotar as providências necessárias.
 
 Permanecemos à disposição para quaisquer esclarecimentos adicionais.` },
+            senha_servidor: { inputs: [], fn: () => `Prezado(a),
+
+Informo que a redefinição de senha de servidores efetivos e comissionados é realizada diretamente pelo setor de Recursos Humanos (RH) do respectivo órgão de lotação do servidor.
+
+O suporte técnico realiza a redefinição de senha apenas para servidores terceirizados. Excepcionalmente, poderão ser analisados casos envolvendo servidores efetivos ou comissionados quando houver indícios de falha sistêmica, devidamente comprovados por meio de evidências (prints de tela, mensagens de erro, entre outros) e mediante autorização do servidor envolvido.
+
+Permanecemos à disposição para quaisquer esclarecimentos adicionais.` },
+            acesso_chamados: { inputs: [], fn: () => `Prezado(a),
+
+Em atenção à solicitação apresentada, informo que a concessão de acesso ao Sistema de Chamados e Demandas para abertura de solicitações deverá ser requerida por meio de Ofício encaminhado em processo SEI, acompanhado da Portaria Específica de designação do servidor, publicada no Diário Oficial do Estado, conforme disposto no art. 9º, § 1º, da Instrução Normativa SEAD nº 8, de 17 de fevereiro de 2023.
+
+Ressalta-se que o servidor designado deverá ocupar cargo efetivo ou Cargo em Comissão (CAS), observados os critérios estabelecidos na referida norma.
+
+Após o encaminhamento da documentação pertinente, a solicitação será analisada para as providências cabíveis.
+
+Permanecemos à disposição para quaisquer esclarecimentos adicionais.` },
             unidade: { inputs: [], fn: () => `Prezado(a),\n\nInformo que o(a) servidor(a) informado(a) já possui acesso com permissão de assinatura (Básico) em outra unidade.\n\nPara a concessão de assinatura em mais de um setor (unidade), é necessário anexar, no chamado, cópia da Portaria publicada no Diário Oficial, de forma explícita, citando "cumulativamente" ou "sem prejuízo das demais funções".\n\nCaso não haja Portaria, recomendamos a utilização da funcionalidade "Bloco de Assinatura", disponibilizada no SEI.\n\nPermanecemos à disposição para quaisquer esclarecimentos.` },
             planilha: { inputs: [], fn: () => `Prezado(a),\n\nPara cadastro e acesso ao SEI, é necessário anexar a planilha de cadastro devidamente preenchida com os dados do(a) servidor(a).` },
             abertura_bd: { 

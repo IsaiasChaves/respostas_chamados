@@ -147,6 +147,15 @@ Destacamos, ainda, que muitos documentos de uso recorrente podem ser padronizado
 Por fim, informamos que todas as solicitações de criação de novos Tipos de Documento serão analisadas quanto à sua finalidade, necessidade institucional, aderência às normas vigentes e conformidade com as diretrizes da Redação Oficial.
 
 Permanecemos à disposição para eventuais esclarecimentos.` },
+            modelo_documento: { inputs: [], fn: () => `Prezado(a),
+
+Para dar prosseguimento à sua solicitação, solicitamos o encaminhamento do modelo desejado nos formatos .DOCX (Microsoft Word) ou HTML, contendo todas as informações, formatações e ajustes necessários.
+
+Ressaltamos que a elaboração e a adequação do conteúdo do modelo são de responsabilidade da unidade solicitante, cabendo à equipe técnica apenas a parametrização e disponibilização do documento no sistema.
+
+Informamos ainda que a inclusão ou alteração do modelo no SEI será realizada após a validação prévia pelo usuário no ambiente de testes (SEI Treinar), mediante o recebimento do arquivo devidamente revisado e aprovado pela área demandante.
+
+Permanecemos no aguardo do envio da documentação para dar continuidade ao atendimento da solicitação.` },
             unidade: { inputs: [], fn: () => `Prezado(a),\n\nInformo que o(a) servidor(a) informado(a) já possui acesso com permissão de assinatura (Básico) em outra unidade.\n\nPara a concessão de assinatura em mais de um setor (unidade), é necessário anexar, no chamado, cópia da Portaria publicada no Diário Oficial, de forma explícita, citando "cumulativamente" ou "sem prejuízo das demais funções".\n\nCaso não haja Portaria, recomendamos a utilização da funcionalidade "Bloco de Assinatura", disponibilizada no SEI.\n\nPermanecemos à disposição para quaisquer esclarecimentos.` },
             planilha: { inputs: [], fn: () => `Prezado(a),\n\nPara cadastro e acesso ao SEI, é necessário anexar a planilha de cadastro devidamente preenchida com os dados do(a) servidor(a).` },
             abertura_bd: { 

@@ -191,6 +191,16 @@ Permaneço à disposição para quaisquer esclarecimentos.` },
             criacao_acesso: { 
                 inputs: ['Usuário'], 
                 placeholder: "Ex: quarenta e lá vai pancada",
+                fn: (v) => `Prezado(a),\n\nInformamos que o cadastro da servidor(a) foi realizado com sucesso, conforme solicitado.\n\nDados de acesso:\n\nUsuário: ${v[0]}\nSenha inicial: 123\n\nO usuário(a) foi vinculado(a) ao módulo Almoxarifado, com o perfil de Requisitante.\n\nSolicitamos que o acesso seja realizado utilizando as credenciais acima. Conforme as políticas de segurança do sistema, será necessário realizar a alteração da senha após o primeiro acesso.\n\nPermanecemos à disposição para quaisquer esclarecimentos ou solicitações adicionais.\n\nAtenciosamente,\n\nSuporte GRP`
+            },
+            reset_senha: { 
+                inputs: ['Usuário'], 
+                placeholder: "Ex: quarenta e lá vai pancada",
+                fn: (v) => `Prezado(a),\n\nInformamos que a redefinição da senha do servidor(a) foi realizada com sucesso, conforme solicitado.\n\nDados de acesso:\n\nUsuário: ${v[0]}\nSenha inicial: 123\n\nSolicitamos que o acesso seja realizado utilizando as credenciais acima. Conforme as políticas de segurança do sistema, será necessário realizar a alteração da senha após o primeiro acesso.\n\nPermanecemos à disposição para quaisquer esclarecimentos ou solicitações adicionais.\n\nAtenciosamente,\n\nSuporte GRP`
+            },
+            resumida: { 
+                inputs: ['Usuário'], 
+                placeholder: "Ex: quarenta e lá vai pancada",
                 fn: (v) => `Prezado(a),\nSua solicitação foi atendida.\n\nUsuário(s): \n${v[0]}\nSenha: 123\n\nFicamos à disposição para quaisquer esclarecimentos.`
             }
         }, 
@@ -324,7 +334,7 @@ Permaneço à disposição para quaisquer esclarecimentos.` },
                     const label = document.createElement('label');
                     label.innerText = labelTxt + ":";
                     container.appendChild(label);
-                    if((sys === 'sei' && ['criacao', 'lotacao', 'reabertura', 'desanexar'].includes(mod)) || (sys === 'grp' && mod === 'criacao_acesso')) {
+                    if((sys === 'sei' && ['criacao', 'lotacao', 'reabertura', 'desanexar'].includes(mod)) || (sys === 'grp' && ['criacao_acesso', 'reset_senha'].includes(mod))) {
                         const area = document.createElement('textarea');
                         area.id = `input-${index}`;
                         area.placeholder = config.placeholder || "Digite os dados...";

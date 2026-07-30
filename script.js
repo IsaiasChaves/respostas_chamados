@@ -195,12 +195,12 @@ Permaneço à disposição para quaisquer esclarecimentos.` },
             },
             reset_senha: { 
                 inputs: ['Usuário'], 
-                placeholder: "Ex: quarenta e lá vai pancada",
+                placeholder: "Ex: R-HIV",
                 fn: (v) => `Prezado(a),\n\nInformamos que a redefinição da senha do servidor(a) foi realizada com sucesso, conforme solicitado.\n\nDados de acesso:\n\nUsuário(s):\n${v[0]}\nSenha inicial: 123\n\nSolicitamos que o acesso seja realizado utilizando as credenciais acima. Conforme as políticas de segurança do sistema, será necessário realizar a alteração da senha após o primeiro acesso.\n\nPermanecemos à disposição para quaisquer esclarecimentos ou solicitações adicionais.\n\nAtenciosamente,\n\nSuporte GRP`
             },
             resumida: { 
                 inputs: ['Usuário'], 
-                placeholder: "Ex: quarenta e lá vai pancada",
+                placeholder: "Ex: T-Croks",
                 fn: (v) => `Prezado(a),\nSua solicitação foi atendida.\n\nUsuário(s): \n${v[0]}\nSenha: 123\n\nFicamos à disposição para quaisquer esclarecimentos.`
             }
         }, 

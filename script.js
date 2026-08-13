@@ -29,6 +29,8 @@ const SENHA_CORRETA = "suporte123";
         }
     }
 
+
+
     /* ===================== MENU MOBILE ===================== */
     function toggleMenu() {
         const nav = document.querySelector('nav');
@@ -180,6 +182,7 @@ Solicito, por gentileza, autorização para a realização de uma nova redefini�
 
 Permaneço à disposição para quaisquer esclarecimentos.` },
             acesso_contracheque: { inputs: ['Usuário', 'Senha'], fn: (v) => `Prezado(a),\n\nInformamos que sua solicitação foi atendida e o acesso ao sistema de Contracheque foi restabelecido.\n\nDados de acesso:\n\nUsuário: ${v[0]}\nSenha provisória: ${v[1]}\n\nImportante: A senha provisória deve ser digitada manualmente. Recomendamos não utilizar os recursos de copiar e colar durante o primeiro acesso.\n\nApós o login, o(a) servidor(a) deverá acessar o portal (https://minhaconta.ac.gov.br/) para realizar a alteração da senha provisória e definir uma nova senha de sua preferência.\n\nEm caso de dúvidas ou necessidade de suporte adicional, permanecemos à disposição.` },
+            correcao_lotacao: { inputs: [], fn: () => `Prezado(a),\n\nInformamos que foi identificado que a inconsistência nos acessos aos sistemas Contracheque e PontoWeb decorre de divergências nas lotações cadastradas no sistema e-Turmalina.\n\nA regularização da situação depende da atualização das lotações pelo setor de Recursos Humanos (RH) do respectivo órgão. Após a conclusão das correções cadastrais no sistema e-Turmalina, deverá ser aberto um chamado informando que as lotações foram regularizadas, para que seja realizada a atualização geral dos sistemas e, consequentemente, a normalização dos acessos.\n\nEnquanto a regularização não for concluída, caso o servidor necessite de informações financeiras mensais ou anuais, orientamos que procure o setor de Recursos Humanos (RH) de seu órgão, onde poderá ser emitida a respectiva ficha financeira.\n\nCaso seja identificada a inexistência da unidade administrativa no sistema e-Turmalina, deverá ser instaurado processo no SEI, por meio de ofício, solicitando sua criação. O processo deverá ser encaminhado à unidade ITAC - PRES, acompanhado da portaria publicada no Diário Oficial do Estado que comprove a criação ou alteração da estrutura organizacional do órgão e a vinculação da unidade à sua estrutura administrativa.\n\nPermanecemos à disposição para prestar os esclarecimentos que se fizerem necessários.` },
             abaco: { inputs: ['Número do Chamado'], fn: (v) => `Prezado(a),\n\nInformo que foi aberto chamado junto à empresa Ábaco (${v[0]}). Assim que obtivermos um retorno, entraremos em contato.` }
         },
         integracao: {
@@ -195,15 +198,38 @@ Permaneço à disposição para quaisquer esclarecimentos.` },
             },
             reset_senha: { 
                 inputs: ['Usuário'], 
-                placeholder: "Ex: quarenta e lá vai pancada",
+                placeholder: "Ex: R-HIV",
                 fn: (v) => `Prezado(a),\n\nInformamos que a redefinição da senha do servidor(a) foi realizada com sucesso, conforme solicitado.\n\nDados de acesso:\n\nUsuário(s):\n${v[0]}\nSenha inicial: 123\n\nSolicitamos que o acesso seja realizado utilizando as credenciais acima. Conforme as políticas de segurança do sistema, será necessário realizar a alteração da senha após o primeiro acesso.\n\nPermanecemos à disposição para quaisquer esclarecimentos ou solicitações adicionais.\n\nAtenciosamente,\n\nSuporte GRP`
             },
             resumida: { 
                 inputs: ['Usuário'], 
-                placeholder: "Ex: quarenta e lá vai pancada",
+                placeholder: "Ex: T-Croks",
                 fn: (v) => `Prezado(a),\nSua solicitação foi atendida.\n\nUsuário(s): \n${v[0]}\nSenha: 123\n\nFicamos à disposição para quaisquer esclarecimentos.`
             }
+            ,
+            chamado_link: {
+                inputs: ['Serviço Executado','Referência','Servidor','UG'],
+                fn: (v) => `ATENDIMENTO REALIZADO\n\nServiço Executado: ${v[0]}\n\nReferência: Chamado Interno da SEAD nº ${v[1]}\n\nServidor: ${v[2]}\n\nUG: ${v[3]}\n\nSituação: Atendimento realizado conforme solicitado.`
+            }
         }, 
+            // Novo modelo: Chamado Link (GRP)
+            // Formato solicitado:
+            // ATENDIMENTO REALIZADO
+            // Serviço Executado: (opção)
+            // Referência: Chamado Interno da SEAD nº (input)
+            // Servidor: (input)
+            // UG: (input)
+            // Situação: Atendimento realizado conforme solicitado.
+        
+            // Definição do modelo
+            // Nota: inputs são usados apenas para manter compatibilidade com a renderização padrão;
+            // a criação dos campos é feita no selectModel quando identificado o modelo.
+        
+            // adiciona em grp abaixo (mantemos a estrutura para busca)
+        
+            // o objeto real é inserido dentro do objeto 'grp' para evitar redefinição, então:
+        
+            // (inserido na definição existente do banco de dados 'grp' acima)
         vpn: {
             acesso_vpn: { 
                 inputs: ['Usuário'], 
@@ -307,14 +333,54 @@ Permaneço à disposição para quaisquer esclarecimentos.` },
         }
     }
 
-    function selectModel(sys, mod) {
+    function selectModel(sys, mod, btn) {
         if (['utilidades', 'documentos', 'notas'].includes(sys)) return;
         currentModel = mod;
         const config = database[sys][mod];
         document.querySelectorAll('.model-btn').forEach(b => b.classList.remove('active'));
-        event.target.classList.add('active');
+        if (btn && btn.classList) {
+            btn.classList.add('active');
+        } else {
+            // fallback: tentar localizar o botão pelo atributo onclick
+            const modelBtns = document.querySelectorAll(`#${sys}-models .model-btn`);
+            for (const b of modelBtns) {
+                const attr = b.getAttribute('onclick') || '';
+                if (attr.includes(`'${mod}'`) || attr.includes(`\"${mod}\"`)) { b.classList.add('active'); break; }
+            }
+        }
         const container = document.getElementById('fields-container');
         container.innerHTML = '';
+
+        // Tratamento especial para modelo 'chamado_link' do GRP
+        if (sys === 'grp' && mod === 'chamado_link') {
+            document.getElementById('input-area').classList.remove('hidden');
+            // Serviço Executado (select)
+            const label0 = document.createElement('label');
+            label0.innerText = 'Serviço Executado:';
+            container.appendChild(label0);
+            const select = document.createElement('select');
+            select.className = 'input-text';
+            select.id = 'input-0';
+            ['Redefinição de Senha','Criação de Acesso','Dúvidas','Apoio Técnico'].forEach(opt => {
+                const o = document.createElement('option');
+                o.value = opt;
+                o.innerText = opt;
+                select.appendChild(o);
+            });
+            select.onchange = updatePreview;
+            container.appendChild(select);
+
+            // Referência: Chamado Interno
+            container.innerHTML += `<label>Referência: Chamado Interno da SEAD nº</label><input type="text" class="input-text" id="input-1" oninput="updatePreview()">`;
+
+            // Servidor
+            container.innerHTML += `<label>Servidor:</label><input type="text" class="input-text" id="input-2" oninput="updatePreview()">`;
+
+            // UG com datalist
+            container.innerHTML += `<label>UG:</label><input type="text" class="input-text" id="input-3" list="lista-orgaos" oninput="updatePreview()">`;
+            updatePreview();
+            return;
+        }
         if(config.inputs && config.inputs.length > 0) {
             document.getElementById('input-area').classList.remove('hidden');
             if (mod === 'abertura_bd') {

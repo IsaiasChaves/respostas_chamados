@@ -51,58 +51,60 @@
         <h1 id="system-title">SEI - Sistema Eletrônico de Informações</h1>
         
         <div id="sei-models" class="model-selector">
-            <button class="model-btn" onclick="selectModel('sei', 'criacao')">Criação de Usuário</button>
-            <button class="model-btn" onclick="selectModel('sei', 'lotacao')">Lotação</button>
-            <button class="model-btn" onclick="selectModel('sei', 'desligamento')">Desligamento</button>
-            <button class="model-btn" onclick="selectModel('sei', 'reabertura')">Reabertura de Processo</button>
-            <button class="model-btn" onclick="selectModel('sei', 'desanexar')">Desanexar Processo</button>
-            <button class="model-btn" onclick="selectModel('sei', 'restrito')">Processo Restrito</button>
-            <button class="model-btn" onclick="selectModel('sei', 'sem_resposta')">Chamado sem Resposta</button>
-            <button class="model-btn" onclick="selectModel('sei', 'unidade')">Mais de uma Unidade</button>
-            <button class="model-btn" onclick="selectModel('sei', 'planilha')">Pedir Planilha</button>
-            <button class="model-btn" onclick="selectModel('sei', 'abertura_bd')">Abertura Demanda BD</button>
-            <button class="model-btn" onclick="selectModel('sei', 'demanda_user')">Abertura Demanda/User</button>
+            <button class="model-btn" onclick="selectModel('sei', 'criacao', this)">Criação de Usuário</button>
+            <button class="model-btn" onclick="selectModel('sei', 'lotacao', this)">Lotação</button>
+            <button class="model-btn" onclick="selectModel('sei', 'desligamento', this)">Desligamento</button>
+            <button class="model-btn" onclick="selectModel('sei', 'reabertura', this)">Reabertura de Processo</button>
+            <button class="model-btn" onclick="selectModel('sei', 'desanexar', this)">Desanexar Processo</button>
+            <button class="model-btn" onclick="selectModel('sei', 'restrito', this)">Processo Restrito</button>
+            <button class="model-btn" onclick="selectModel('sei', 'sem_resposta', this)">Chamado sem Resposta</button>
+            <button class="model-btn" onclick="selectModel('sei', 'unidade', this)">Mais de uma Unidade</button>
+            <button class="model-btn" onclick="selectModel('sei', 'planilha', this)">Pedir Planilha</button>
+            <button class="model-btn" onclick="selectModel('sei', 'abertura_bd', this)">Abertura Demanda BD</button>
+            <button class="model-btn" onclick="selectModel('sei', 'demanda_user', this)">Abertura Demanda/User</button>
             <div class="submenu-wrapper">
-                <button class="model-btn" onclick="selectModel('sei', 'solicitacao')">Solicitação Atendida</button>
+                <button class="model-btn" onclick="selectModel('sei', 'solicitacao', this)">Solicitação Atendida</button>
                 <button type="button" class="sub-arrow-btn" onclick="toggleSubmenu(event, 'sei-solicitacao-sub')">▾</button>
             </div>
-            <button id="sei-solicitacao-sub" class="model-btn submenu submenu-item hidden" onclick="selectModel('sei', 'criacao_estrutura')">Criação Estrutura</button>
-            <button id="sei-assinatura-terceirizados" class="model-btn submenu submenu-item hidden" onclick="selectModel('sei', 'assinatura_terceirizados')">Assinatura Terceirizados</button>
-            <button id="sei-senha-servidor" class="model-btn submenu submenu-item hidden" onclick="selectModel('sei', 'senha_servidor')">Senha Servidor</button>
-            <button id="sei-acesso-chamados" class="model-btn submenu submenu-item hidden" onclick="selectModel('sei', 'acesso_chamados')">Acesso Chamados</button>
-            <button id="sei-criacao-documento" class="model-btn submenu submenu-item hidden" onclick="selectModel('sei', 'criacao_documento')">Criação de Documento</button>
-            <button id="sei-modelo-documento" class="model-btn submenu submenu-item hidden" onclick="selectModel('sei', 'modelo_documento')">Modelo de Documento</button>
+            <button id="sei-solicitacao-sub" class="model-btn submenu submenu-item hidden" onclick="selectModel('sei', 'criacao_estrutura', this)">Criação Estrutura</button>
+            <button id="sei-assinatura-terceirizados" class="model-btn submenu submenu-item hidden" onclick="selectModel('sei', 'assinatura_terceirizados', this)">Assinatura Terceirizados</button>
+            <button id="sei-senha-servidor" class="model-btn submenu submenu-item hidden" onclick="selectModel('sei', 'senha_servidor', this)">Senha Servidor</button>
+            <button id="sei-acesso-chamados" class="model-btn submenu submenu-item hidden" onclick="selectModel('sei', 'acesso_chamados', this)">Acesso Chamados</button>
+            <button id="sei-criacao-documento" class="model-btn submenu submenu-item hidden" onclick="selectModel('sei', 'criacao_documento', this)">Criação de Documento</button>
+            <button id="sei-modelo-documento" class="model-btn submenu submenu-item hidden" onclick="selectModel('sei', 'modelo_documento', this)">Modelo de Documento</button>
         </div>
 	
         <div id="eturmalina-models" class="model-selector hidden">
-            <button class="model-btn" onclick="selectModel('eturmalina', 'criacao_acesso')">Criação de Acesso</button>
-            <button class="model-btn" onclick="selectModel('eturmalina', 'reset_senha')">Reset de Senha</button>
-            <button class="model-btn" onclick="selectModel('eturmalina', 'reset_autorizacao')">Reset Autorização</button>
-            <button class="model-btn" onclick="selectModel('eturmalina', 'acesso_contracheque')">Acesso Contracheque</button>
-            <button class="model-btn" onclick="selectModel('eturmalina', 'abaco')">Chamado Ábaco</button>
+            <button class="model-btn" onclick="selectModel('eturmalina', 'criacao_acesso', this)">Criação de Acesso</button>
+            <button class="model-btn" onclick="selectModel('eturmalina', 'reset_senha', this)">Reset de Senha</button>
+            <button class="model-btn" onclick="selectModel('eturmalina', 'reset_autorizacao', this)">Reset Autorização</button>
+            <button class="model-btn" onclick="selectModel('eturmalina', 'acesso_contracheque', this)">Acesso Contracheque</button>
+            <button class="model-btn" onclick="selectModel('eturmalina', 'correcao_lotacao', this)">Correção Lotação</button>
+            <button class="model-btn" onclick="selectModel('eturmalina', 'abaco', this)">Chamado Ábaco</button>
         </div>
 
         <div id="integracao-models" class="model-selector hidden">
-            <button class="model-btn" onclick="selectModel('integracao', 'criacao_email')">Criação de Email</button>
-            <button class="model-btn" onclick="selectModel('integracao', 'reset_senha')">Reset de Senha</button>
-            <button class="model-btn" onclick="selectModel('integracao', 'alteracao_nivel')">Alteração de Nível</button>
+            <button class="model-btn" onclick="selectModel('integracao', 'criacao_email', this)">Criação de Email</button>
+            <button class="model-btn" onclick="selectModel('integracao', 'reset_senha', this)">Reset de Senha</button>
+            <button class="model-btn" onclick="selectModel('integracao', 'alteracao_nivel', this)">Alteração de Nível</button>
         </div>
 
         <div id="grp-models" class="model-selector hidden">
-            <button class="model-btn" onclick="selectModel('grp', 'criacao_acesso')">Criação de Acesso</button>
-            <button class="model-btn" onclick="selectModel('grp', 'reset_senha')">Reset de Senha</button>
-            <button class="model-btn" onclick="selectModel('grp', 'resumida')">Resumida</button>
+            <button class="model-btn" onclick="selectModel('grp', 'criacao_acesso', this)">Criação de Acesso</button>
+            <button class="model-btn" onclick="selectModel('grp', 'reset_senha', this)">Reset de Senha</button>
+            <button class="model-btn" onclick="selectModel('grp', 'chamado_link', this)">Chamado Link</button>
+            <button class="model-btn" onclick="selectModel('grp', 'resumida', this)">Resumida</button>
         </div>
 
 		<div id="vpn-models" class="model-selector hidden">
-   			 <button class="model-btn" onclick="selectModel('vpn', 'acesso_vpn')">Criação de VPN</button>
+    		 <button class="model-btn" onclick="selectModel('vpn', 'acesso_vpn', this)">Criação de VPN</button>
    				 <a href="documentos/configurar_vpn.pdf" download target="_blank" class="model-btn" style="border: 2px solid #1a252f; font-weight: bold;">📥 Baixar Manual VPN</a>
 			</div>
 
         <div id="compras-models" class="model-selector hidden">
-            <button class="model-btn" onclick="selectModel('compras', 'criacao_compras')">Criação de Acesso</button>
-            <button class="model-btn" onclick="selectModel('compras', 'solicitacao')">Solicitação Atendida</button>
-            <button class="model-btn" onclick="selectModel('compras', 'criacao_compras')">Criação de Acesso</button>
+            <button class="model-btn" onclick="selectModel('compras', 'criacao_compras', this)">Criação de Acesso</button>
+            <button class="model-btn" onclick="selectModel('compras', 'solicitacao', this)">Solicitação Atendida</button>
+            <button class="model-btn" onclick="selectModel('compras', 'criacao_compras', this)">Criação de Acesso</button>
         </div>
 
         <div id="documentos-models" class="model-selector hidden">

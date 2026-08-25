@@ -489,8 +489,7 @@ Permaneço à disposição para quaisquer esclarecimentos.` },
     function copyText() {
         const text = document.getElementById('preview').value;
         if(!text) return;
-        const textToCopy = text.split('\n').map(line => line === '' ? '⠀' : line).join('\n');
-        navigator.clipboard.writeText(textToCopy).then(() => {
+        navigator.clipboard.writeText(text).then(() => {
             const status = document.getElementById('status');
             status.innerText = "Copiado com sucesso!";
             setTimeout(() => { status.innerText = ""; }, 2000);

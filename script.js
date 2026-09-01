@@ -209,7 +209,7 @@ Permaneço à disposição para quaisquer esclarecimentos.` },
             ,
             chamado_link: {
                 inputs: ['Serviço Executado','Referência','Servidor','UG'],
-                fn: (v) => `ATENDIMENTO REALIZADO\n\nServiço Executado: ${v[0]}\n\nReferência: Chamado Interno da SEAD nº ${v[1]}\n\nServidor: ${v[2]}\n\nUG: ${v[3]}\n\nSituação: Atendimento realizado conforme solicitado.`
+                fn: (v) => `ATENDIMENTO REALIZADO\n\nServiço Executado: ${v[0]}\nReferência: Chamado Interno da SEAD nº ${v[1]}\nServidor: ${v[2]}\nUG: ${v[3]}\nSituação: Atendimento realizado conforme solicitado.`
             }
         }, 
             // Novo modelo: Chamado Link (GRP)

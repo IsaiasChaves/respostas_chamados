@@ -205,8 +205,11 @@ Permaneço à disposição para quaisquer esclarecimentos.` },
                 inputs: ['Usuário'], 
                 placeholder: "Ex: T-Croks",
                 fn: (v) => `Prezado(a),\nSua solicitação foi atendida.\n\nUsuário(s): \n${v[0]}\nSenha: 123\n\nFicamos à disposição para quaisquer esclarecimentos.`
-            }
-            ,
+            },
+            anulacao_empenho: {
+                inputs: [],
+                fn: () => `Prezados,\n\nInformamos que a solicitação foi atendida e que o procedimento de anulação do empenho foi realizado.\n\nPermanecemos à disposição para eventuais dúvidas ou solicitações adicionais.\n\nAtenciosamente,\nSuporte GRP`
+            },
             chamado_link: {
                 inputs: ['Serviço Executado','Referência','Servidor','UG'],
                 fn: (v) => `ATENDIMENTO REALIZADO\n\nServiço Executado: ${v[0]}\nReferência: Chamado Interno da SEAD nº ${v[1]}\nServidor: ${v[2]}\nUG: ${v[3]}\nSituação: Atendimento realizado conforme solicitado.`

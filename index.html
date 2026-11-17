@@ -21,6 +21,20 @@
     <span class="label-text" id="theme-label">Modo Escuro</span>
 </button>
 
+<!-- BUSCA DE RESPOSTAS (abaixo do botão de tema) -->
+<div id="search-box">
+    <span class="search-icon">🔍</span>
+    <input type="search" id="search-input" placeholder="Buscar..." autocomplete="off" title="Buscar resposta em todos os sistemas (Ctrl+K)"
+           oninput="searchResponses()" onkeydown="searchKeydown(event)" onfocus="searchResponses()">
+    <ul id="search-results" class="hidden"></ul>
+</div>
+
+<!-- SAUDAÇÃO AUTOMÁTICA (abaixo da busca) -->
+<button id="greeting-toggle" onclick="toggleGreeting()" aria-pressed="false" title="Saudação automática">
+    <span class="greeting-text">Saudação</span>
+    <span class="switch"></span>
+</button>
+
 <!-- OVERLAY PARA FECHAR MENU -->
 <div id="menu-overlay" onclick="closeMenu()"></div>
 
@@ -72,6 +86,7 @@
             <button id="sei-acesso-chamados" class="model-btn submenu submenu-item hidden" onclick="selectModel('sei', 'acesso_chamados', this)">Acesso Chamados</button>
             <button id="sei-criacao-documento" class="model-btn submenu submenu-item hidden" onclick="selectModel('sei', 'criacao_documento', this)">Criação de Documento</button>
             <button id="sei-modelo-documento" class="model-btn submenu submenu-item hidden" onclick="selectModel('sei', 'modelo_documento', this)">Modelo de Documento</button>
+            <button id="sei-lgpd-externo" class="model-btn submenu submenu-item hidden" onclick="selectModel('sei', 'lgpd_externo', this)">LGPD Externo</button>
         </div>
 	
         <div id="eturmalina-models" class="model-selector hidden">
@@ -81,6 +96,7 @@
             <button class="model-btn" onclick="selectModel('eturmalina', 'acesso_contracheque', this)">Acesso Contracheque</button>
             <button class="model-btn" onclick="selectModel('eturmalina', 'correcao_lotacao', this)">Correção Lotação</button>
             <button class="model-btn" onclick="selectModel('eturmalina', 'abaco', this)">Chamado Ábaco</button>
+            <button class="model-btn" onclick="selectModel('eturmalina', 'solicitacao', this)">Solicitação Atendida</button>
         </div>
 
         <div id="integracao-models" class="model-selector hidden">

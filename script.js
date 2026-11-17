@@ -171,7 +171,18 @@ Permanecemos no aguardo do envio da documentação para dar continuidade ao aten
             demanda_user: { 
                 inputs: [], 
                 fn: () => `Prezado,\n\nPara atender à sua solicitação, foi necessária a abertura de uma demanda junto ao setor de Infraestrutura e Banco de Dados, com previsão de conclusão em até 7 dias úteis.\nApós a finalização, os relatórios serão anexados a este chamado.\n\nFicamos à disposição para quaisquer esclarecimentos.` 
-            }
+            },
+            lgpd_externo: { inputs: [], fn: () => `Prezado(a),
+
+Informamos que, para a realização do cadastro como Usuário Externo no SEI/AC, é obrigatória a apresentação da documentação prevista no procedimento de credenciamento, incluindo a selfie segurando o documento oficial de identificação.
+
+Essa exigência tem como finalidade confirmar a identidade do solicitante e garantir a segurança do processo de credenciamento, prevenindo o uso indevido de dados por terceiros.
+
+Conforme as normas que regulamentam o Sistema Eletrônico de Informações do Estado do Acre, o cadastro como Usuário Externo implica a aceitação das disposições estabelecidas no Decreto nº 8.478, de 10 de fevereiro de 2018, e na Instrução Normativa Conjunta SGA/CGE nº 001, de 22 de fevereiro de 2018. Além disso, o usuário assume a responsabilidade pelo uso da assinatura eletrônica na modalidade cadastrada (login e senha), respondendo civil, penal e administrativamente pelas ações realizadas em seu acesso.
+
+Dessa forma, não é possível efetuar o cadastro sem o envio da selfie segurando o documento de identificação, por se tratar de um requisito obrigatório do procedimento de credenciamento.
+
+Permanecemos à disposição para quaisquer esclarecimentos.` }
         },
         eturmalina: {
             criacao_acesso: { inputs: [], fn: () => `Prezado(a),\n\nO acesso ao sistema eTurmalina foi concedido.\n\nUsuário: CPF do servidor sem pontos ou traço.\nSenha: CPF do servidor sem pontos ou traço.\n\nO próprio sistema orientará o usuário quanto à troca de senha no primeiro acesso.\n\nLink de acesso: https://sigrh.ac.gov.br/eturmalina` },
@@ -183,7 +194,8 @@ Solicito, por gentileza, autorização para a realização de uma nova redefini�
 Permaneço à disposição para quaisquer esclarecimentos.` },
             acesso_contracheque: { inputs: ['Usuário', 'Senha'], fn: (v) => `Prezado(a),\n\nInformamos que sua solicitação foi atendida e o acesso ao sistema de Contracheque foi restabelecido.\n\nDados de acesso:\n\nUsuário: ${v[0]}\nSenha provisória: ${v[1]}\n\nImportante: A senha provisória deve ser digitada manualmente. Recomendamos não utilizar os recursos de copiar e colar durante o primeiro acesso.\n\nApós o login, o(a) servidor(a) deverá acessar o portal (https://minhaconta.ac.gov.br/) para realizar a alteração da senha provisória e definir uma nova senha de sua preferência.\n\nEm caso de dúvidas ou necessidade de suporte adicional, permanecemos à disposição.` },
             correcao_lotacao: { inputs: [], fn: () => `Prezado(a),\n\nInformamos que foi identificado que a inconsistência nos acessos aos sistemas Contracheque e PontoWeb decorre de divergências nas lotações cadastradas no sistema e-Turmalina.\n\nA regularização da situação depende da atualização das lotações pelo setor de Recursos Humanos (RH) do respectivo órgão. Após a conclusão das correções cadastrais no sistema e-Turmalina, deverá ser aberto um processo para ITAC - PRES informando que as lotações foram regularizadas, para que seja realizada a atualização geral dos sistemas e, consequentemente, a normalização dos acessos.\n\nEnquanto a regularização não for concluída, caso o servidor necessite de informações financeiras mensais ou anuais, orientamos que procure o setor de Recursos Humanos (RH) de seu órgão, onde poderá ser emitida a respectiva ficha financeira.\n\nCaso seja identificada a inexistência da unidade administrativa no sistema e-Turmalina, deverá ser instaurado processo no SEI, por meio de ofício, solicitando sua criação. O processo deverá ser encaminhado à unidade ITAC - PRES, acompanhado da portaria publicada no Diário Oficial do Estado que comprove a criação ou alteração da estrutura organizacional do órgão e a vinculação da unidade à sua estrutura administrativa.\n\nPermanecemos à disposição para prestar os esclarecimentos que se fizerem necessários.` },
-            abaco: { inputs: ['Número do Chamado'], fn: (v) => `Prezado(a),\n\nInformo que foi aberto chamado junto à empresa Ábaco (${v[0]}). Assim que obtivermos um retorno, entraremos em contato.` }
+            abaco: { inputs: ['Número do Chamado'], fn: (v) => `Prezado(a),\n\nInformo que foi aberto chamado junto à empresa Ábaco (${v[0]}). Assim que obtivermos um retorno, entraremos em contato.` },
+            solicitacao: { inputs: [], fn: () => `Prezado(a),\n\nSua solicitação foi atendida.\n\nEstamos à disposição para quaisquer dúvidas ou informações adicionais.` }
         },
         integracao: {
             criacao_email: { inputs: ['Login', 'Senha Provisória'], fn: (v) => `Prezado(a),\n\nUsuário(s) cadastrado(s) conforme solicitado.\n\nLogin: ${v[0]}\nSenha Provisória: ${v[1]}\nO servidor(a) deve acessar o https://minhaconta.ac.gov.br/ para realizar a alteração de sua senha.\nUsar a senha provisória de forma escrita (não copiar e colar)\n\nEstamos à disposição para quaisquer dúvidas ou informações adicionais.` },
@@ -211,6 +223,7 @@ Permaneço à disposição para quaisquer esclarecimentos.` },
                 fn: () => `Prezados,\n\nInformamos que a solicitação foi atendida e que o procedimento de anulação do empenho foi realizado.\n\nPermanecemos à disposição para eventuais dúvidas ou solicitações adicionais.\n\nAtenciosamente,\nSuporte GRP`
             },
             chamado_link: {
+                noGreeting: true, // não recebe a saudação automática
                 inputs: ['Serviço Executado','Referência','Servidor','UG'],
                 fn: (v) => `ATENDIMENTO REALIZADO\n\nServiço Executado: ${v[0]}\nReferência: Chamado Interno da SEAD nº ${v[1]}\nServidor: ${v[2]}\nUG: ${v[3]}\nSituação: Atendimento realizado conforme solicitado.`
             }
@@ -486,7 +499,8 @@ Permaneço à disposição para quaisquer esclarecimentos.` },
             });
         }
         
-        document.getElementById('preview').value = config.fn(values, checkedTypes);
+        const text = config.fn(values, checkedTypes);
+        document.getElementById('preview').value = config.noGreeting ? text : applyGreeting(text);
     }
 
     function copyText() {
@@ -524,3 +538,174 @@ Permaneço à disposição para quaisquer esclarecimentos.` },
         const saved = localStorage.getItem('rascunho_notas');
         if(saved) document.getElementById('notes-area').value = saved;
     }
+
+    /* ===================== SAUDAÇÃO AUTOMÁTICA ===================== */
+    function isGreetingOn() {
+        try { return localStorage.getItem('saudacao_auto') === 'on'; } catch (e) { return false; }
+    }
+
+    function getGreeting() {
+        const h = new Date().getHours();
+        if (h >= 5 && h < 12) return 'bom dia';
+        if (h >= 12 && h < 18) return 'boa tarde';
+        return 'boa noite';
+    }
+
+    // "Prezado(a)," -> "Prezado(a), bom dia!"; textos sem "Prezado" recebem "Bom dia!" no início
+    function applyGreeting(text) {
+        if (!isGreetingOn() || !text) return text;
+        const greeting = getGreeting();
+        const re = /^(Prezad[oa]s?(?:\(a\)|\(as\))?),/;
+        if (re.test(text)) return text.replace(re, `$1, ${greeting}!`);
+        return greeting.charAt(0).toUpperCase() + greeting.slice(1) + '!\n\n' + text;
+    }
+
+    function updateGreetingButton() {
+        const btn = document.getElementById('greeting-toggle');
+        if (!btn) return;
+        const on = isGreetingOn();
+        btn.classList.toggle('on', on);
+        btn.setAttribute('aria-pressed', on);
+        btn.title = on
+            ? `Saudação automática LIGADA (agora: "${getGreeting()}")`
+            : 'Saudação automática DESLIGADA';
+    }
+
+    function toggleGreeting() {
+        try { localStorage.setItem('saudacao_auto', isGreetingOn() ? 'off' : 'on'); } catch (e) {}
+        updateGreetingButton();
+        updatePreview();
+    }
+
+    document.addEventListener('DOMContentLoaded', updateGreetingButton);
+
+    /* ===================== BUSCA DE RESPOSTAS ===================== */
+    const SYSTEM_NAMES = {
+        sei: 'SEI', eturmalina: 'e-Turmalina', integracao: 'Integração',
+        grp: 'GRP', vpn: 'VPN', compras: 'Compras'
+    };
+    let searchIndex = null;
+    let searchMatches = [];
+    let searchActive = -1;
+
+    function normalizeText(s) {
+        return (s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+    }
+
+    // Monta o índice a partir dos botões existentes: novas respostas entram na busca automaticamente
+    function buildSearchIndex() {
+        const seen = new Set();
+        searchIndex = [];
+        document.querySelectorAll('.model-btn[onclick*="selectModel("]').forEach(btn => {
+            const m = btn.getAttribute('onclick').match(/selectModel\('([^']+)',\s*'([^']+)'/);
+            if (!m) return;
+            const sys = m[1], mod = m[2];
+            const key = sys + '|' + mod;
+            if (seen.has(key) || !database[sys] || !database[sys][mod]) return;
+            seen.add(key);
+            const config = database[sys][mod];
+            let body = '';
+            try { body = config.fn(config.inputs.map(() => ''), []); } catch (e) {}
+            const label = btn.textContent.trim();
+            searchIndex.push({
+                sys, mod, label,
+                labelNorm: normalizeText(label),
+                textNorm: normalizeText(label + ' ' + (SYSTEM_NAMES[sys] || sys) + ' ' + body)
+            });
+        });
+    }
+
+    function searchResponses() {
+        if (!searchIndex) buildSearchIndex();
+        const input = document.getElementById('search-input');
+        const list = document.getElementById('search-results');
+        const terms = normalizeText(input.value).split(/\s+/).filter(Boolean);
+        list.innerHTML = '';
+        searchActive = -1;
+
+        if (terms.length === 0) { list.classList.add('hidden'); searchMatches = []; return; }
+
+        // Resultados com o termo no nome aparecem primeiro
+        const score = item => terms.filter(t => item.labelNorm.includes(t)).length;
+        searchMatches = searchIndex
+            .filter(item => terms.every(t => item.textNorm.includes(t)))
+            .sort((a, b) => score(b) - score(a));
+
+        if (searchMatches.length === 0) {
+            const li = document.createElement('li');
+            li.className = 'search-empty';
+            li.textContent = 'Nenhuma resposta encontrada.';
+            list.appendChild(li);
+        } else {
+            searchMatches.forEach((item, i) => {
+                const li = document.createElement('li');
+                li.className = 'search-item';
+                const name = document.createElement('span');
+                name.textContent = item.label;
+                const tag = document.createElement('span');
+                tag.className = 'search-tag';
+                tag.textContent = SYSTEM_NAMES[item.sys] || item.sys;
+                li.append(name, tag);
+                li.onmousedown = (e) => { e.preventDefault(); openSearchResult(i); };
+                list.appendChild(li);
+            });
+        }
+        list.classList.remove('hidden');
+    }
+
+    function searchKeydown(e) {
+        const items = document.querySelectorAll('#search-results .search-item');
+        if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+            if (!items.length) return;
+            e.preventDefault();
+            searchActive = (searchActive + (e.key === 'ArrowDown' ? 1 : -1) + items.length) % items.length;
+            items.forEach((li, i) => li.classList.toggle('active', i === searchActive));
+            items[searchActive].scrollIntoView({ block: 'nearest' });
+        } else if (e.key === 'Enter') {
+            e.preventDefault();
+            if (searchMatches.length) openSearchResult(searchActive >= 0 ? searchActive : 0);
+        } else if (e.key === 'Escape') {
+            closeSearch(true);
+        }
+    }
+
+    function closeSearch(clear) {
+        document.getElementById('search-results').classList.add('hidden');
+        if (clear) document.getElementById('search-input').value = '';
+        searchActive = -1;
+    }
+
+    function openSearchResult(i) {
+        const item = searchMatches[i];
+        if (!item) return;
+        closeSearch(true);
+        document.getElementById('search-input').blur();
+        closeMenu();
+        showSystem(item.sys);
+        // showSystem auto-seleciona o primeiro modelo com setTimeout; selecionamos o escolhido depois dele
+        setTimeout(() => {
+            const btn = document.querySelector(`#${item.sys}-models .model-btn[onclick*="'${item.mod}'"]`);
+            if (btn && btn.classList.contains('submenu-item') && btn.classList.contains('hidden')) {
+                document.querySelectorAll('.submenu-item').forEach(el => el.classList.remove('hidden'));
+            }
+            selectModel(item.sys, item.mod, btn);
+            if (btn) btn.scrollIntoView({ block: 'nearest' });
+        }, 10);
+    }
+
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('#search-box')) closeSearch(false);
+    });
+
+    // Atalho: Ctrl+K (ou "/" fora de campos de texto) foca a busca
+    document.addEventListener('keydown', (e) => {
+        const tag = document.activeElement ? document.activeElement.tagName : '';
+        const typing = ['INPUT', 'TEXTAREA', 'SELECT'].includes(tag);
+        if ((e.ctrlKey && e.key.toLowerCase() === 'k') || (e.key === '/' && !typing)) {
+            const input = document.getElementById('search-input');
+            if (!input) return;
+            e.preventDefault();
+            input.focus();
+            input.select();
+        }
+    });

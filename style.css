@@ -816,6 +816,8 @@
             color: white;
         }
         .search-empty { opacity: 0.7; cursor: default; }
+        .search-tag-link { color: var(--accent); }
+        .search-item:hover .search-tag-link, .search-item.active .search-tag-link { color: white; }
         .search-tag {
             flex-shrink: 0;
             font-size: 0.7rem;

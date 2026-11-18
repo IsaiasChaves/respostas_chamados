@@ -613,6 +613,20 @@ Permaneço à disposição para quaisquer esclarecimentos.` },
                 textNorm: normalizeText(label + ' ' + (SYSTEM_NAMES[sys] || sys) + ' ' + body)
             });
         });
+
+        // Links da aba Utilidades: ao escolher, abrem em outra aba
+        document.querySelectorAll('#utilidades-models .model-btn').forEach(el => {
+            const a = el.querySelector('a[href]');
+            if (!a) return;
+            const label = (el.firstChild && el.firstChild.textContent || '').trim();
+            if (!label) return;
+            const url = a.href;
+            searchIndex.push({
+                url, label,
+                labelNorm: normalizeText(label),
+                textNorm: normalizeText(label + ' link ' + url)
+            });
+        });
     }
 
     function searchResponses() {
@@ -644,7 +658,13 @@ Permaneço à disposição para quaisquer esclarecimentos.` },
                 name.textContent = item.label;
                 const tag = document.createElement('span');
                 tag.className = 'search-tag';
-                tag.textContent = SYSTEM_NAMES[item.sys] || item.sys;
+                if (item.url) {
+                    tag.textContent = 'Link ↗';
+                    tag.classList.add('search-tag-link');
+                    li.title = item.url;
+                } else {
+                    tag.textContent = SYSTEM_NAMES[item.sys] || item.sys;
+                }
                 li.append(name, tag);
                 li.onmousedown = (e) => { e.preventDefault(); openSearchResult(i); };
                 list.appendChild(li);
@@ -680,6 +700,10 @@ Permaneço à disposição para quaisquer esclarecimentos.` },
         if (!item) return;
         closeSearch(true);
         document.getElementById('search-input').blur();
+        if (item.url) {
+            window.open(item.url, '_blank', 'noopener');
+            return;
+        }
         closeMenu();
         showSystem(item.sys);
         // showSystem auto-seleciona o primeiro modelo com setTimeout; selecionamos o escolhido depois dele

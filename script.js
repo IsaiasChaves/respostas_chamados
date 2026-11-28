@@ -1225,7 +1225,7 @@ Permaneço à disposição para quaisquer esclarecimentos.` },
             } else if (localTs > data.ts) {
                 await apiPost({ acao: 'nota', nome, texto: local.texto, ts: localTs }); // envia o que só estava aqui
             }
-            setNotesStatus('Salvo na nuvem ✓');
+            setNotesStatus('Salvo na nuvem');
         } catch (e) {
             setNotesStatus('Sem conexão — salvo apenas neste computador por enquanto.');
         }

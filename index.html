@@ -1,5 +1,9 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-br" data-theme="dark">
+<script>
+    // Aplica o tema antes de desenhar a página (evita piscar). Padrão: escuro.
+    try { document.documentElement.setAttribute('data-theme', localStorage.getItem('tema') || 'dark'); } catch (e) {}
+</script>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,7 +14,7 @@
     <link rel="stylesheet" href="style.css">
     
 </head>
-<body onload="checkLoginState(); loadNotes(); applyTheme();">
+<body onload="checkLoginState(); applyTheme();">
 
 <!-- BOTÃO MENU HAMBÚRGUER - MOBILE -->
 <button id="menu-toggle" class="mobile-menu-btn" onclick="toggleMenu()" title="Abrir menu">
@@ -59,8 +63,23 @@
     <button class="tab-btn" id="btn-compras" onclick="showSystem('compras')">Compras</button>
     <button class="tab-btn" id="btn-documentos" onclick="showSystem('documentos')">Documentos</button>
     <button class="tab-btn" id="btn-utilidades" onclick="showSystem('utilidades')">Utilidades (Links)</button>
+    <button class="tab-btn" id="btn-historico" onclick="showSystem('historico')">Histórico</button>
     <button class="tab-btn" id="btn-notas" onclick="showSystem('notas')">Bloco de Notas</button>
+    <button id="attendant-btn" class="attendant-btn" onclick="askAttendant(true)" title="Clique para trocar de usuário">👤 <span id="attendant-name">Identificar-se</span></button>
 </nav>
+
+<!-- IDENTIFICAÇÃO DO ATENDENTE -->
+<div id="name-overlay" class="hidden">
+    <div class="login-box">
+        <h2>Identificação</h2>
+        <p class="name-hint">Digite seu login do SEI.</p>
+        <input type="text" id="sei-login-input" placeholder="ex.: nome.sobrenome" autocomplete="username" autocapitalize="off" spellcheck="false"
+               onkeyup="if(event.key === 'Enter') submitSeiLogin()">
+        <button onclick="submitSeiLogin()">Entrar</button>
+        <button id="name-cancel" class="name-secondary hidden" onclick="closeNameOverlay()">Cancelar</button>
+        <p id="sei-login-error" style="color: #e74c3c; font-size: 0.85rem; margin-top: 10px; font-weight: bold;"></p>
+    </div>
+</div>
 
 <main>
     <div class="container">
@@ -165,7 +184,35 @@
         </div>
 
         <div id="notas-models" class="hidden">
-            <textarea id="notes-area" oninput="saveNotes()" placeholder="Qualquer biruliro escrito aqui ficará salvo até você limpar o cache do navegador."></textarea>
+            <p id="notes-status" class="notes-status"></p>
+            <textarea id="notes-area" oninput="saveNotes()" placeholder="Seu bloco de notas pessoal. Fica salvo na nuvem e aparece em qualquer computador ao entrar com seu nome. Não guarde senhas aqui."></textarea>
+        </div>
+
+        <div id="historico-models" class="hidden">
+            <div class="hist-toolbar">
+                <div class="hist-head">
+                    <div class="hist-scope">
+                        <button class="hist-scope-btn active" data-scope="eu" onclick="setHistScope('eu')">Eu</button>
+                        <button class="hist-scope-btn" data-scope="equipe" onclick="setHistScope('equipe')">Equipe</button>
+                    </div>
+                    <p class="hist-info">Respostas copiadas nos últimos 90 dias. Respostas iguais aparecem uma vez, com a quantidade de usos.</p>
+                </div>
+                <div class="hist-side">
+                    <button class="hist-refresh" onclick="loadHistory(false)">⟳ Atualizar</button>
+                    <div class="hist-stats">
+                        <div class="hist-stat"><span class="hist-stat-num" id="hist-today">0</span><span class="hist-stat-label">Hoje</span></div>
+                        <div class="hist-stat"><span class="hist-stat-num" id="hist-7d">0</span><span class="hist-stat-label">7 dias</span></div>
+                        <div class="hist-stat"><span class="hist-stat-num" id="hist-30d">0</span><span class="hist-stat-label">1 mês</span></div>
+                        <div class="hist-stat"><span class="hist-stat-num" id="hist-90d">0</span><span class="hist-stat-label">90 dias</span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="hist-search-box">
+                <span></span>
+                <input type="search" id="hist-search" placeholder="Buscar nas respostas (login, nome...)" autocomplete="off" oninput="onHistorySearch()">
+            </div>
+            <div id="hist-filters" class="hist-filters"></div>
+            <div id="hist-list"></div>
         </div>
 
         <div id="workspace-area">

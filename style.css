@@ -74,6 +74,50 @@
             width: 300px;
         }
         .login-box h2 { margin-bottom: 20px; color: var(--primary); }
+
+        /* IDENTIFICAÇÃO DO ATENDENTE */
+        #name-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(26, 37, 47, 0.85); display: flex; align-items: center;
+            justify-content: center; z-index: 9998;
+        }
+        #name-overlay.hidden { display: none; }
+        .name-hint { font-size: 0.9rem; color: #555; margin: 0 0 12px; }
+        .login-box.name-box { width: 420px; max-width: calc(100vw - 32px); box-sizing: border-box; padding: 30px; max-height: calc(100vh - 32px); overflow-y: auto; }
+        .name-box h2 { margin-top: 0; }
+        .name-list { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+        .login-box .name-option {
+            background: #f0f2f5;
+            color: var(--primary);
+            border: 1px solid #dfe6e9;
+            padding: 12px 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        .login-box .name-option:hover { border-color: var(--accent); background: #f0f7ff; }
+        .login-box .name-option.current { border-color: var(--accent); }
+        .name-confirm-big { font-size: 2.2rem; font-weight: 800; color: var(--accent); line-height: 1.2; margin: 4px 0; word-break: break-word; }
+        .login-box .name-secondary { background: none; color: #555; border: 1px solid #ccc; margin-top: 8px; }
+        .login-box .name-secondary:hover { border-color: #999; }
+        .login-box .name-secondary.hidden { display: none; }
+        #name-step-confirm button + button { margin-top: 8px; }
+        @media (max-width: 480px) { .name-list { grid-template-columns: 1fr; } .name-confirm-big { font-size: 1.7rem; } }
+        .attendant-btn {
+            margin-top: auto;
+            background: none;
+            border: 1px solid #3e4f5f;
+            color: var(--tab-btn-color);
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-align: left;
+            cursor: pointer;
+            font-size: 0.85rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            transition: 0.3s;
+        }
+        .attendant-btn:hover { background: var(--secondary); color: white; }
         .login-box input {
             padding: 12px; width: 100%; margin-bottom: 15px;
             border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box;
@@ -929,4 +973,197 @@
                 right: 8px;
                 padding: 4px 8px;
             }
+        }
+
+
+        /* ===================== HISTÓRICO ===================== */
+
+        .hist-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+        .hist-head { display: flex; flex-direction: column; gap: 10px; flex: 1; min-width: 220px; }
+        .hist-info { margin: 0; font-size: 0.85rem; color: var(--label-color); }
+        .hist-scope { display: inline-flex; align-self: flex-start; border: 1px solid var(--model-btn-border); border-radius: 50px; overflow: hidden; }
+        .hist-scope-btn {
+            background: var(--model-btn-bg);
+            color: var(--model-btn-text);
+            border: none;
+            padding: 8px 22px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.88rem;
+            transition: 0.2s;
+        }
+        .hist-scope-btn + .hist-scope-btn { border-left: 1px solid var(--model-btn-border); }
+        .hist-scope-btn.active { background: var(--accent); color: white; }
+        .hist-refresh {
+            background: var(--model-btn-bg);
+            border: 1px solid var(--model-btn-border);
+            color: var(--model-btn-text);
+            padding: 7px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.8rem;
+            transition: 0.2s;
+        }
+        .hist-refresh:hover { border-color: var(--accent); color: var(--accent); }
+
+        .hist-search-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            margin-bottom: 14px;
+            border-radius: 50px;
+            border: 1.5px solid var(--model-btn-border);
+            background: var(--model-btn-bg);
+        }
+        .hist-search-box:focus-within { border-color: var(--accent); }
+        .hist-search-box input {
+            flex: 1; min-width: 0; border: none; outline: none; background: transparent;
+            font-family: inherit; font-size: 0.9rem; color: var(--preview-text); padding: 0; margin: 0;
+        }
+        .hist-search-info { font-size: 0.8rem; color: var(--label-color); margin: 0 0 10px; }
+        .hist-loading, .hist-more { padding: 10px 14px; font-size: 0.8rem; color: var(--label-color); margin: 0; border-top: 1px solid var(--model-btn-border); }
+        .hist-uses { font-weight: 700; color: var(--accent); }
+        .hist-tag { font-size: 0.75rem; font-weight: 600; color: var(--accent); margin-bottom: 4px; }
+        .hist-footer { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 8px; }
+        .hist-who { font-size: 0.75rem; color: var(--label-color); }
+        #hist-list > .hist-entry { border: 1px solid var(--model-btn-border); border-radius: 8px; margin-bottom: 8px; }
+
+        .notes-status { margin: 0 0 6px; font-size: 0.78rem; color: var(--label-color); min-height: 1em; }
+        .hist-side { display: flex; flex-direction: column; align-items: stretch; gap: 8px; }
+        .hist-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+        @media (max-width: 480px) { .hist-stats { grid-template-columns: repeat(2, 1fr); } }
+        .hist-stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            white-space: nowrap;
+            padding: 6px 10px;
+            border-radius: 6px;
+            background: var(--model-btn-bg);
+            border: 1px solid var(--model-btn-border);
+        }
+        .hist-stat-num { font-size: 1.2rem; font-weight: bold; color: var(--accent); line-height: 1.2; }
+        .hist-stat-label { font-size: 0.7rem; font-weight: 600; color: var(--label-color); text-transform: uppercase; letter-spacing: 0.5px; }
+
+        .hist-filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+        .hist-chip {
+            background: var(--model-btn-bg);
+            border: 1px solid var(--model-btn-border);
+            color: var(--model-btn-text);
+            padding: 6px 14px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+        .hist-chip:hover { border-color: var(--accent); }
+        .hist-chip.active { background: var(--accent); border-color: var(--accent); color: white; }
+
+        .hist-empty {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--label-color);
+            border: 1px dashed var(--input-border-dashed);
+            border-radius: 8px;
+            background: var(--input-bg);
+        }
+
+        .hist-system { margin-bottom: 25px; }
+        .hist-system-title {
+            font-size: 1.05rem;
+            color: var(--h1-color);
+            margin: 0 0 10px 0;
+            padding-bottom: 6px;
+            border-bottom: 2px solid var(--accent);
+        }
+        .hist-count {
+            display: inline-block;
+            margin-left: 8px;
+            padding: 1px 8px;
+            border-radius: 50px;
+            background: var(--model-btn-border);
+            color: var(--model-btn-text);
+            font-size: 0.72rem;
+            font-weight: 600;
+            vertical-align: middle;
+        }
+
+        .hist-model {
+            background: var(--input-bg);
+            border: 1px solid var(--model-btn-border);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+        .hist-model summary {
+            cursor: pointer;
+            padding: 10px 14px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--model-btn-text);
+            user-select: none;
+        }
+        .hist-model summary:hover { color: var(--accent); }
+
+        .hist-entry {
+            border-top: 1px solid var(--model-btn-border);
+            padding: 10px 14px;
+            background: var(--model-btn-bg);
+        }
+        .hist-meta {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            font-size: 0.75rem;
+            color: var(--label-color);
+            margin-bottom: 6px;
+        }
+        .hist-expire { opacity: 0.8; }
+        .hist-expire.soon { color: var(--danger); opacity: 1; font-weight: 600; }
+
+        .hist-text {
+            white-space: pre-wrap;
+            word-break: break-word;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: var(--preview-text);
+            cursor: pointer;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .hist-text.expanded { display: block; -webkit-line-clamp: unset; line-clamp: unset; }
+
+        .hist-actions { display: flex; gap: 8px; margin-top: 8px; justify-content: flex-end; }
+        .hist-btn {
+            border: none;
+            padding: 6px 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: white;
+            transition: 0.2s;
+        }
+        .hist-btn-copy { background: var(--success); }
+        .hist-btn-copy:hover { background: #219150; }
+        .hist-btn-del { background: none; color: var(--danger); border: 1px solid var(--danger); }
+        .hist-btn-del:hover { background: var(--danger); color: white; }
+
+        @media (max-width: 480px) {
+            .hist-meta { flex-direction: column; gap: 2px; }
+            .hist-actions { justify-content: stretch; }
+            .hist-btn { flex: 1; }
         }

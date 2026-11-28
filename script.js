@@ -4,13 +4,13 @@ const SENHA_CORRETA = "suporte123";
 
     /* ===================== MODO NOTURNO ===================== */
     function applyTheme() {
-        const saved = localStorage.getItem('tema') || 'light';
+        const saved = localStorage.getItem('tema') || 'dark'; // modo escuro é o padrão
         document.documentElement.setAttribute('data-theme', saved);
         updateThemeButton(saved);
     }
 
     function toggleTheme() {
-        const current = document.documentElement.getAttribute('data-theme') || 'light';
+        const current = document.documentElement.getAttribute('data-theme') || 'dark';
         const next = current === 'light' ? 'dark' : 'light';
         document.documentElement.setAttribute('data-theme', next);
         localStorage.setItem('tema', next);
@@ -282,6 +282,7 @@ Permaneço à disposição para quaisquer esclarecimentos.` },
         if(input === SENHA_CORRETA) {
             localStorage.setItem('acessoPermitido', 'true');
             document.getElementById('login-overlay').style.display = 'none';
+            askAttendant(false);
         } else {
             document.getElementById('error-msg').innerText = "Senha incorreta!";
         }
@@ -290,6 +291,7 @@ Permaneço à disposição para quaisquer esclarecimentos.` },
     function checkLoginState() {
         if(localStorage.getItem('acessoPermitido') === 'true') {
             document.getElementById('login-overlay').style.display = 'none';
+            askAttendant(false);
         }
     }
 
@@ -318,18 +320,21 @@ Permaneço à disposição para quaisquer esclarecimentos.` },
             compras: 'Sistema de Compras AC',
             documentos: 'Documentos e Modelos',
             utilidades: 'Utilidades e Links Importantes',
-            notas: 'Bloco de Notas Pessoal'
+            notas: 'Bloco de Notas Pessoal',
+            historico: 'Histórico (últimos 90 dias)'
         };
         document.getElementById('system-title').innerText = titles[sys];
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         document.getElementById(`btn-${sys}`).classList.add('active');
         
-        document.querySelectorAll('.model-selector, #notas-models').forEach(div => div.classList.add('hidden'));
+        document.querySelectorAll('.model-selector, #notas-models, #historico-models').forEach(div => div.classList.add('hidden'));
         const target = document.getElementById(`${sys}-models`);
         if(target) target.classList.remove('hidden');
+        if (sys === 'historico') loadHistory(true);
+        if (sys !== 'notas') flushNotesNow(); // ao sair do bloco de notas, salva na hora
 
         const workspace = document.getElementById('workspace-area');
-        if (['notas', 'documentos', 'utilidades'].includes(sys)) {
+        if (['notas', 'documentos', 'utilidades', 'historico'].includes(sys)) {
             workspace.classList.add('hidden');
         } else {
             workspace.classList.remove('hidden');
@@ -339,7 +344,7 @@ Permaneço à disposição para quaisquer esclarecimentos.` },
         document.getElementById('preview').value = "";
 
         // Auto-seleciona o primeiro modelo do sistema
-        if (!['notas', 'documentos', 'utilidades'].includes(sys)) {
+        if (!['notas', 'documentos', 'utilidades', 'historico'].includes(sys)) {
             setTimeout(() => {
                 const firstModelBtn = document.querySelector(`#${sys}-models .model-btn`);
                 if (firstModelBtn) {
@@ -503,13 +508,30 @@ Permaneço à disposição para quaisquer esclarecimentos.` },
         document.getElementById('preview').value = config.noGreeting ? text : applyGreeting(text);
     }
 
+    // Respostas com campos de entrada só são registradas quando ao menos um campo de texto foi preenchido
+    function inputsFilled() {
+        if (!currentModel || !database[currentSystem] || !database[currentSystem][currentModel]) return false;
+        const inputs = database[currentSystem][currentModel].inputs || [];
+        if (inputs.length === 0) return true; // resposta sem campos: registra sempre
+        return inputs.some((_, i) => {
+            const el = document.getElementById(`input-${i}`);
+            // campos de lista (select) sempre têm valor, então não contam como "preenchidos"
+            return el && el.tagName !== 'SELECT' && el.value.trim() !== '';
+        });
+    }
+
     function copyText() {
         const text = document.getElementById('preview').value;
         if(!text) return;
         navigator.clipboard.writeText(text).then(() => {
             const status = document.getElementById('status');
-            status.innerText = "Copiado com sucesso!";
-            setTimeout(() => { status.innerText = ""; }, 2000);
+            if (inputsFilled()) {
+                registerUse(currentSystem, currentModel, text);
+                status.innerText = "Copiado com sucesso!";
+            } else {
+                status.innerText = "Copiado! (não registrado: preencha os campos)";
+            }
+            setTimeout(() => { status.innerText = ""; }, 2500);
         });
     }
 
@@ -528,15 +550,6 @@ Permaneço à disposição para quaisquer esclarecimentos.` },
             });
         }
         updatePreview();
-    }
-
-    /* BLOCO DE NOTAS */
-    function saveNotes() {
-        localStorage.setItem('rascunho_notas', document.getElementById('notes-area').value);
-    }
-    function loadNotes() {
-        const saved = localStorage.getItem('rascunho_notas');
-        if(saved) document.getElementById('notes-area').value = saved;
     }
 
     /* ===================== SAUDAÇÃO AUTOMÁTICA ===================== */
@@ -732,4 +745,526 @@ Permaneço à disposição para quaisquer esclarecimentos.` },
             input.focus();
             input.select();
         }
+    });
+
+    /* ===================== EQUIPE / USUÁRIO ===================== */
+    // Login do SEI -> nome usado nos registros. Para incluir alguém, adicione uma linha aqui.
+    const TEAM = [
+        { login: 'jessicamaria.campos', nome: 'Jéssica Campos' },
+        { login: 'isaias.chaves',       nome: 'Isaias Chaves' },
+        { login: 'lucas.veiga',         nome: 'Lucas Veiga' },
+        { login: 'lucas.diuare',        nome: 'Lucas Diuare' },
+        { login: 'gabriel.rodrigues',   nome: 'Gabriel Sol' },
+        { login: 'elissandra.santos',   nome: 'Elissandra Teles' },
+        { login: 'tassio.assis',        nome: 'Tassio Assis' },
+        { login: 'marilou.acacio',      nome: 'Marilou Acacio' },
+        { login: 'andre.magalhaes',     nome: 'André Magalhaes' },
+        { login: 'andre.medeiros',      nome: 'André Medeiros' },
+        { login: 'hudson.medina',       nome: 'Hudson Medina' },
+        { login: 'william.rocha',       nome: 'William Rocha' }
+    ];
+    const TEAM_NAMES = TEAM.map(t => t.nome);
+    const ATTENDANT_KEY = 'atendente_nome';
+
+    function findByLogin(login) {
+        const l = String(login || '').trim().toLowerCase().replace(/@.*$/, '');
+        return l ? TEAM.find(t => t.login && t.login === l) : null;
+    }
+
+    function getAttendant() {
+        try {
+            const n = localStorage.getItem(ATTENDANT_KEY) || '';
+            return TEAM_NAMES.includes(n) ? n : '';
+        } catch (e) { return ''; }
+    }
+
+    function updateAttendantButton() {
+        const el = document.getElementById('attendant-name');
+        if (el) el.textContent = getAttendant() || 'Identificar-se';
+    }
+
+    // force = true: abre mesmo que a pessoa já esteja identificada (para trocar)
+    function askAttendant(force) {
+        updateAttendantButton();
+        if (!force && getAttendant()) { loadNotes(); return; }
+        const input = document.getElementById('sei-login-input');
+        input.value = '';
+        document.getElementById('sei-login-error').textContent = '';
+        document.getElementById('name-cancel').classList.toggle('hidden', !getAttendant());
+        document.getElementById('name-overlay').classList.remove('hidden');
+        setTimeout(() => input.focus(), 50);
+    }
+
+    function closeNameOverlay() {
+        if (!getAttendant()) return; // primeira vez: identificação obrigatória
+        document.getElementById('name-overlay').classList.add('hidden');
+    }
+
+    // Entrada pelo login do SEI: validação local, sem consultar a planilha (instantâneo)
+    function submitSeiLogin() {
+        const input = document.getElementById('sei-login-input');
+        const member = findByLogin(input.value);
+        if (!member) {
+            document.getElementById('sei-login-error').textContent = 'Login não encontrado na equipe. Verifique e tente de novo.';
+            input.select();
+            return;
+        }
+        const anterior = getAttendant();
+        if (anterior && anterior !== member.nome) flushNotesNow(); // salva as notas da pessoa anterior
+        try { localStorage.setItem(ATTENDANT_KEY, member.nome); } catch (e) {}
+        document.getElementById('name-overlay').classList.add('hidden');
+        updateAttendantButton();
+        const st = document.getElementById('status');
+        if (st) { st.innerText = `Bem-vindo(a), ${member.nome}!`; setTimeout(() => { st.innerText = ''; }, 2500); }
+        if (anterior !== member.nome) {
+            loadNotes(); // carrega em segundo plano, não trava a entrada
+            if (currentSystem === 'historico') loadHistory(true);
+        }
+    }
+
+    /* ===================== PLANILHA (Apps Script) ===================== */
+    const METRICS_URL = 'https://script.google.com/macros/s/AKfycbyHQUUJoH3yS_Hw1dufKwMUBHw0pBj6EshswbxtubycJI59zZOP7zOmwODn7dacAVV5AA/exec';
+
+    async function apiGet(params) {
+        const url = METRICS_URL + '?' + new URLSearchParams(params).toString();
+        const r = await fetch(url);
+        const data = await r.json();
+        if (!data.ok) throw new Error(data.erro || 'erro');
+        return data;
+    }
+
+    function apiPost(body) {
+        // text/plain + no-cors: o Apps Script aceita sem bloqueio de CORS
+        return fetch(METRICS_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify(body)
+        });
+    }
+
+    /* ===================== REGISTRO DE USO (métricas) ===================== */
+    // Cada cópia vira uma linha na planilha. Respostas sem campos não enviam texto (só contam o uso).
+    // Respostas com campos enviam o texto com as senhas escondidas.
+    const METRICS_QUEUE_KEY = 'metricas_pendentes';
+    let metricsSending = false;
+    let lastCopy = null; // evita registrar a mesma resposta, sem alteração, em menos de 15s
+
+    function getModelLabel(sys, mod) {
+        const btn = document.querySelector(`#${sys}-models .model-btn[onclick*="'${mod}'"]`);
+        return btn ? btn.textContent.trim() : mod;
+    }
+
+    // Esconde senhas: valores digitados em campos "Senha" e o restante de linhas "...senha...: valor"
+    function maskPasswords(text, sys, mod) {
+        let out = text;
+        const config = database[sys] && database[sys][mod];
+        if (config && config.inputs) {
+            config.inputs.forEach((label, i) => {
+                if (!/senha/i.test(label)) return;
+                const el = document.getElementById(`input-${i}`);
+                const v = el && el.value.trim();
+                if (v && v.length >= 3) out = out.split(v).join('••••');
+            });
+        }
+        return out.replace(/(senha[^:\n]*:[ \t]*)([^\n]+)/gi, '$1••••');
+    }
+
+    function registerUse(sys, mod, text) {
+        const now = Date.now();
+        if (lastCopy && lastCopy.sys === sys && lastCopy.mod === mod && lastCopy.text === text && now - lastCopy.ts < 15000) return;
+        lastCopy = { sys, mod, text, ts: now };
+        const config = database[sys] && database[sys][mod];
+        const hasInputs = !!(config && config.inputs && config.inputs.length);
+        const q = loadMetricsQueue();
+        q.push({
+            id: now.toString(36) + Math.random().toString(36).slice(2, 7),
+            ts: new Date(now).toISOString(),
+            sistema: SYSTEM_NAMES[sys] || sys,
+            resposta: getModelLabel(sys, mod),
+            chave: sys + '|' + mod,
+            atendente: getAttendant() || 'Não identificado',
+            texto: hasInputs ? maskPasswords(text, sys, mod) : ''
+        });
+        saveMetricsQueue(q);
+        flushMetrics();
+    }
+
+    function loadMetricsQueue() {
+        try { const a = JSON.parse(localStorage.getItem(METRICS_QUEUE_KEY) || '[]'); return Array.isArray(a) ? a : []; }
+        catch (e) { return []; }
+    }
+    function saveMetricsQueue(a) {
+        try { localStorage.setItem(METRICS_QUEUE_KEY, JSON.stringify(a.slice(-2000))); } catch (e) {}
+    }
+
+    // Envia a fila; se estiver sem internet, tenta de novo depois (nada se perde)
+    async function flushMetrics() {
+        if (!METRICS_URL || metricsSending) return;
+        const q = loadMetricsQueue();
+        if (!q.length) return;
+        metricsSending = true;
+        try {
+            await apiPost(q);
+            saveMetricsQueue(loadMetricsQueue().slice(q.length)); // remove só o que foi enviado
+        } catch (e) {
+            // falha de rede: mantém na fila
+        } finally {
+            metricsSending = false;
+        }
+    }
+
+    window.addEventListener('online', flushMetrics);
+
+    /* ===================== HISTÓRICO (Eu / Equipe, últimos 90 dias) ===================== */
+    const HIST_DAYS = 90;
+    let histScope = 'eu';        // 'eu' | 'equipe'
+    let histFilter = 'todos';    // sistema selecionado
+    let histResumo = null;
+    let histSearchTimer = null;
+    let histRequest = 0;         // descarta respostas antigas quando outra requisição já foi feita
+
+    function histParams(extra) {
+        const p = Object.assign({ dias: HIST_DAYS }, extra);
+        if (histScope === 'eu') p.nome = getAttendant() || '-';
+        return p;
+    }
+
+    function setHistScope(scope) {
+        histScope = scope;
+        document.querySelectorAll('.hist-scope-btn').forEach(b => b.classList.toggle('active', b.dataset.scope === scope));
+        loadHistory(true);
+    }
+
+    function setHistMessage(msg) {
+        const listEl = document.getElementById('hist-list');
+        listEl.innerHTML = '';
+        const p = document.createElement('p');
+        p.className = 'hist-empty';
+        p.textContent = msg;
+        listEl.appendChild(p);
+    }
+
+    function formatDateTime(ts) {
+        const d = new Date(ts);
+        const p = n => String(n).padStart(2, '0');
+        return `${p(d.getDate())}/${p(d.getMonth() + 1)} às ${p(d.getHours())}:${p(d.getMinutes())}`;
+    }
+
+    function updateHistoryStats(stats) {
+        const s = stats || {};
+        document.getElementById('hist-today').textContent = s.hoje != null ? s.hoje : '–';
+        document.getElementById('hist-7d').textContent = s.d7 != null ? s.d7 : '–';
+        document.getElementById('hist-30d').textContent = s.d30 != null ? s.d30 : '–';
+        document.getElementById('hist-90d').textContent = s.d90 != null ? s.d90 : '–';
+    }
+
+    // reset = true ao entrar na aba / trocar Eu-Equipe: limpa a busca e o filtro
+    async function loadHistory(reset) {
+        if (reset) {
+            histFilter = 'todos';
+            const s = document.getElementById('hist-search');
+            if (s) s.value = '';
+        }
+        const searchVal = (document.getElementById('hist-search').value || '').trim();
+        if (searchVal.length >= 2) return runHistorySearch();
+
+        const req = ++histRequest;
+        setHistMessage('Carregando...');
+        updateHistoryStats(null);
+        await flushMetrics(); // envia o que estiver pendente antes de consultar
+        try {
+            const data = await apiGet(histParams({ acao: 'resumo' }));
+            if (req !== histRequest) return;
+            histResumo = data;
+            updateHistoryStats(data.stats);
+            renderHistoryGroups();
+        } catch (e) {
+            if (req !== histRequest) return;
+            setHistMessage('Não foi possível carregar o histórico. Verifique a conexão e clique em "Atualizar".');
+        }
+    }
+
+    function renderHistoryFilters(grupos) {
+        const filtersEl = document.getElementById('hist-filters');
+        filtersEl.innerHTML = '';
+        if (!grupos.length) return;
+        const totals = {};
+        grupos.forEach(g => { totals[g.sistema] = (totals[g.sistema] || 0) + g.total; });
+        const all = grupos.reduce((a, g) => a + g.total, 0);
+        const mkChip = (key, text, count) => {
+            const b = document.createElement('button');
+            b.className = 'hist-chip' + (histFilter === key ? ' active' : '');
+            b.textContent = `${text} (${count})`;
+            b.onclick = () => { histFilter = key; renderHistoryGroups(); };
+            filtersEl.appendChild(b);
+        };
+        mkChip('todos', 'Todos', all);
+        orderedSystems(Object.keys(totals)).forEach(s => mkChip(s, s, totals[s]));
+    }
+
+    // Ordena os sistemas na mesma ordem do menu
+    function orderedSystems(list) {
+        const order = Object.values(SYSTEM_NAMES);
+        return list.slice().sort((a, b) => {
+            const ia = order.indexOf(a), ib = order.indexOf(b);
+            return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib);
+        });
+    }
+
+    function renderHistoryGroups() {
+        const grupos = (histResumo && histResumo.grupos) || [];
+        if (histFilter !== 'todos' && !grupos.some(g => g.sistema === histFilter)) histFilter = 'todos';
+        renderHistoryFilters(grupos);
+        const listEl = document.getElementById('hist-list');
+        listEl.innerHTML = '';
+        if (!grupos.length) {
+            setHistMessage(histScope === 'eu'
+                ? 'Você não tem respostas registradas nos últimos 90 dias.'
+                : 'Nenhuma resposta registrada pela equipe nos últimos 90 dias.');
+            return;
+        }
+        const bySys = {};
+        grupos.forEach(g => (bySys[g.sistema] = bySys[g.sistema] || []).push(g));
+
+        orderedSystems(Object.keys(bySys)).filter(s => histFilter === 'todos' || s === histFilter).forEach(sys => {
+            const section = document.createElement('section');
+            section.className = 'hist-system';
+            const h2 = document.createElement('h2');
+            h2.className = 'hist-system-title';
+            h2.textContent = sys + ' ';
+            const cnt = document.createElement('span');
+            cnt.className = 'hist-count';
+            cnt.textContent = bySys[sys].reduce((a, g) => a + g.total, 0);
+            h2.appendChild(cnt);
+            section.appendChild(h2);
+
+            bySys[sys].forEach(g => {
+                const det = document.createElement('details');
+                det.className = 'hist-model';
+                const sum = document.createElement('summary');
+                sum.textContent = g.resposta;
+                const c = document.createElement('span');
+                c.className = 'hist-count';
+                c.textContent = g.total;
+                c.title = 'Vezes usada';
+                sum.appendChild(c);
+                det.appendChild(sum);
+                // As respostas do grupo são carregadas só quando ele é aberto
+                det.addEventListener('toggle', () => { if (det.open && !det.dataset.loaded) loadGroupItems(det, g.chave); });
+                section.appendChild(det);
+            });
+            listEl.appendChild(section);
+        });
+    }
+
+    async function loadGroupItems(det, chave) {
+        det.dataset.loaded = '1';
+        const box = document.createElement('div');
+        box.className = 'hist-loading';
+        box.textContent = 'Carregando...';
+        det.appendChild(box);
+        try {
+            const data = await apiGet(histParams({ acao: 'itens', chave }));
+            box.remove();
+            data.itens.forEach(it => det.appendChild(renderHistoryItem(it, false)));
+            if (data.total > data.itens.length) det.appendChild(moreNote(data.total - data.itens.length));
+        } catch (e) {
+            box.textContent = 'Não foi possível carregar. Feche e abra o grupo para tentar de novo.';
+            delete det.dataset.loaded;
+        }
+    }
+
+    function moreNote(n) {
+        const p = document.createElement('p');
+        p.className = 'hist-more';
+        p.textContent = `+ ${n} resposta(s) mais antiga(s). Use a busca para encontrar uma específica.`;
+        return p;
+    }
+
+    // Texto exibido: o salvo na planilha ou, nas respostas sem campos, o modelo padrão
+    function itemText(it) {
+        if (it.texto) return it.texto;
+        const [sys, mod] = String(it.chave).split('|');
+        const config = database[sys] && database[sys][mod];
+        if (!config) return it.resposta;
+        try { return config.fn(config.inputs.map(() => '____'), []); } catch (e) { return it.resposta; }
+    }
+
+    function renderHistoryItem(it, showTag) {
+        const entry = document.createElement('div');
+        entry.className = 'hist-entry';
+
+        const meta = document.createElement('div');
+        meta.className = 'hist-meta';
+        const left = document.createElement('span');
+        left.textContent = 'Último uso: ' + formatDateTime(it.ultimo);
+        const uses = document.createElement('span');
+        uses.className = 'hist-uses';
+        uses.textContent = it.vezes === 1 ? 'Usada 1 vez' : `Usada ${it.vezes} vezes`;
+        meta.append(left, uses);
+        entry.appendChild(meta);
+
+        if (showTag) {
+            const tag = document.createElement('div');
+            tag.className = 'hist-tag';
+            tag.textContent = `${it.sistema} › ${it.resposta}`;
+            entry.appendChild(tag);
+        }
+
+        const text = document.createElement('div');
+        text.className = 'hist-text';
+        const full = itemText(it);
+        text.textContent = full;
+        text.title = 'Clique para expandir/recolher';
+        text.onclick = () => text.classList.toggle('expanded');
+        entry.appendChild(text);
+
+        const footer = document.createElement('div');
+        footer.className = 'hist-footer';
+        const who = document.createElement('span');
+        who.className = 'hist-who';
+        if (histScope === 'equipe') {
+            who.textContent = 'Por: ' + Object.entries(it.atendentes || {})
+                .sort((a, b) => b[1] - a[1])
+                .map(([n, c]) => c > 1 ? `${n} (${c})` : n).join(', ');
+        }
+        const copy = document.createElement('button');
+        copy.className = 'hist-btn hist-btn-copy';
+        copy.textContent = 'Copiar';
+        copy.onclick = () => navigator.clipboard.writeText(full).then(() => {
+            copy.textContent = 'Copiado!';
+            setTimeout(() => { copy.textContent = 'Copiar'; }, 1500);
+        });
+        footer.append(who, copy);
+        entry.appendChild(footer);
+        return entry;
+    }
+
+    // Busca nas respostas (texto, sistema, tipo e pessoa)
+    function onHistorySearch() {
+        clearTimeout(histSearchTimer);
+        histSearchTimer = setTimeout(() => {
+            const v = document.getElementById('hist-search').value.trim();
+            if (v.length >= 2) runHistorySearch();
+            else if (v.length === 0) loadHistory(false);
+        }, 450);
+    }
+
+    async function runHistorySearch() {
+        const q = document.getElementById('hist-search').value.trim();
+        const req = ++histRequest;
+        document.getElementById('hist-filters').innerHTML = '';
+        setHistMessage('Buscando...');
+        try {
+            const data = await apiGet(histParams({ acao: 'buscar', q }));
+            if (req !== histRequest) return;
+            const listEl = document.getElementById('hist-list');
+            listEl.innerHTML = '';
+            if (!data.itens.length) { setHistMessage(`Nenhuma resposta encontrada para "${q}".`); return; }
+            const info = document.createElement('p');
+            info.className = 'hist-search-info';
+            info.textContent = `${data.total} resultado(s) para "${q}"` + (data.total > data.itens.length ? ` — mostrando os ${data.itens.length} mais recentes` : '');
+            listEl.appendChild(info);
+            data.itens.forEach(it => listEl.appendChild(renderHistoryItem(it, true)));
+        } catch (e) {
+            if (req !== histRequest) return;
+            setHistMessage('Não foi possível buscar. Verifique a conexão e tente de novo.');
+        }
+    }
+
+    /* ===================== BLOCO DE NOTAS (por pessoa, salvo na planilha) ===================== */
+    const NOTES_DEBOUNCE = 1500;
+    let notesTimer = null;
+    let notesOwner = '';      // de quem é o texto que está na tela
+    let notesDirty = false;
+
+    function notesKey(nome) { return 'notas_' + nome; }
+
+    function readLocalNotes(nome) {
+        try { const o = JSON.parse(localStorage.getItem(notesKey(nome)) || 'null'); return o && typeof o.texto === 'string' ? o : null; }
+        catch (e) { return null; }
+    }
+    function writeLocalNotes(nome, texto, ts) {
+        try { localStorage.setItem(notesKey(nome), JSON.stringify({ texto, ts })); } catch (e) {}
+    }
+
+    function setNotesStatus(msg) {
+        const el = document.getElementById('notes-status');
+        if (el) el.textContent = msg;
+    }
+
+    async function loadNotes() {
+        const nome = getAttendant();
+        const area = document.getElementById('notes-area');
+        if (!nome || !area) return;
+        notesOwner = nome;
+        notesDirty = false;
+        let local = readLocalNotes(nome);
+
+        // Migra o bloco antigo (antes de existir usuário) para a primeira pessoa que entrar neste computador
+        try {
+            const antigo = localStorage.getItem('rascunho_notas');
+            if (antigo && (!local || !local.texto)) {
+                local = { texto: antigo, ts: Date.now() };
+                writeLocalNotes(nome, antigo, local.ts);
+                apiPost({ acao: 'nota', nome, texto: antigo, ts: local.ts });
+            }
+            if (antigo) localStorage.removeItem('rascunho_notas');
+        } catch (e) {}
+
+        area.value = local ? local.texto : '';
+        setNotesStatus('Sincronizando...');
+        try {
+            const data = await apiGet({ acao: 'nota', nome });
+            if (notesOwner !== nome) return;
+            const localTs = local ? local.ts : 0;
+            if (data.ts > localTs && !notesDirty) {
+                area.value = data.texto;
+                writeLocalNotes(nome, data.texto, data.ts);
+            } else if (localTs > data.ts) {
+                await apiPost({ acao: 'nota', nome, texto: local.texto, ts: localTs }); // envia o que só estava aqui
+            }
+            setNotesStatus('Salvo na nuvem ✓');
+        } catch (e) {
+            setNotesStatus('Sem conexão — salvo apenas neste computador por enquanto.');
+        }
+    }
+
+    function saveNotes() {
+        const nome = getAttendant();
+        if (!nome || nome !== notesOwner) return;
+        const texto = document.getElementById('notes-area').value;
+        notesDirty = true;
+        writeLocalNotes(nome, texto, Date.now());
+        setNotesStatus('Salvando...');
+        clearTimeout(notesTimer);
+        notesTimer = setTimeout(flushNotesNow, NOTES_DEBOUNCE);
+    }
+
+    async function flushNotesNow() {
+        clearTimeout(notesTimer);
+        if (!notesDirty || !notesOwner) return;
+        const local = readLocalNotes(notesOwner);
+        if (!local) return;
+        notesDirty = false;
+        try {
+            await apiPost({ acao: 'nota', nome: notesOwner, texto: local.texto, ts: local.ts });
+            setNotesStatus(local.texto.length > 49000
+                ? '⚠ Nota muito grande: só os primeiros 49.000 caracteres são salvos na nuvem.'
+                : 'Salvo na nuvem ✓');
+        } catch (e) {
+            notesDirty = true;
+            setNotesStatus('Sem conexão — salvo neste computador. Será enviado quando a conexão voltar.');
+        }
+    }
+
+    window.addEventListener('online', () => { if (notesOwner) { notesDirty = true; flushNotesNow(); } });
+    window.addEventListener('pagehide', () => { if (notesDirty) flushNotesNow(); });
+
+    /* ===================== INICIALIZAÇÃO ===================== */
+    document.addEventListener('DOMContentLoaded', () => {
+        updateAttendantButton();
+        flushMetrics();
+        setInterval(flushMetrics, 60000); // reenvia registros pendentes
     });

@@ -520,12 +520,27 @@ Permaneço à disposição para quaisquer esclarecimentos.` },
         });
     }
 
+    // Texto padrão do modelo: campos vazios, nenhuma caixa marcada, com a saudação atual
+    function defaultText(sys, mod) {
+        const config = database[sys] && database[sys][mod];
+        if (!config) return '';
+        let t = '';
+        try { t = config.fn((config.inputs || []).map(() => '____'), []); } catch (e) { return ''; }
+        return config.noGreeting ? t : applyGreeting(t);
+    }
+
+    // true se o texto copiado é diferente do texto padrão (algo foi digitado/editado)
+    function isEdited(sys, mod, text) {
+        return String(text).trim() !== defaultText(sys, mod).trim();
+    }
+
     function copyText() {
         const text = document.getElementById('preview').value;
         if(!text) return;
         navigator.clipboard.writeText(text).then(() => {
             const status = document.getElementById('status');
-            if (inputsFilled()) {
+            // Registra se: a resposta não tem campos, algum campo foi preenchido, ou o texto foi editado
+            if (inputsFilled() || isEdited(currentSystem, currentModel, text)) {
                 registerUse(currentSystem, currentModel, text);
                 status.innerText = "Copiado com sucesso!";
             } else {
@@ -874,8 +889,9 @@ Permaneço à disposição para quaisquer esclarecimentos.` },
         const now = Date.now();
         if (lastCopy && lastCopy.sys === sys && lastCopy.mod === mod && lastCopy.text === text && now - lastCopy.ts < 15000) return;
         lastCopy = { sys, mod, text, ts: now };
-        const config = database[sys] && database[sys][mod];
-        const hasInputs = !!(config && config.inputs && config.inputs.length);
+        // Só grava o texto quando ele difere do padrão (campos preenchidos ou edição manual).
+        // Texto padrão sem alteração não é gravado: apenas conta o uso.
+        const saveText = isEdited(sys, mod, text);
         const q = loadMetricsQueue();
         q.push({
             id: now.toString(36) + Math.random().toString(36).slice(2, 7),
@@ -884,7 +900,7 @@ Permaneço à disposição para quaisquer esclarecimentos.` },
             resposta: getModelLabel(sys, mod),
             chave: sys + '|' + mod,
             atendente: getAttendant() || 'Não identificado',
-            texto: hasInputs ? maskPasswords(text, sys, mod) : ''
+            texto: saveText ? maskPasswords(text, sys, mod) : ''
         });
         saveMetricsQueue(q);
         flushMetrics();
@@ -1225,7 +1241,7 @@ Permaneço à disposição para quaisquer esclarecimentos.` },
             } else if (localTs > data.ts) {
                 await apiPost({ acao: 'nota', nome, texto: local.texto, ts: localTs }); // envia o que só estava aqui
             }
-            setNotesStatus('Salvo na nuvem');
+            setNotesStatus('Salvo na nuvem ✓');
         } catch (e) {
             setNotesStatus('Sem conexão — salvo apenas neste computador por enquanto.');
         }
@@ -1261,6 +1277,32 @@ Permaneço à disposição para quaisquer esclarecimentos.` },
 
     window.addEventListener('online', () => { if (notesOwner) { notesDirty = true; flushNotesNow(); } });
     window.addEventListener('pagehide', () => { if (notesDirty) flushNotesNow(); });
+
+    /* ===================== ATUALIZAÇÃO SEMANAL (toda segunda-feira) =====================
+       Se a página foi aberta antes da última segunda-feira 00h, ela é recarregada para pegar a
+       versão mais nova do site. Só recarrega após 1 hora sem atividade, para não atrapalhar quem está usando. */
+    const RELOAD_IDLE_MS = 60 * 60 * 1000; // 1 hora sem mexer no site
+    const PAGE_LOADED_AT = Date.now();
+    let lastActivity = Date.now();
+    ['keydown', 'mousedown', 'input', 'touchstart'].forEach(ev =>
+        document.addEventListener(ev, () => { lastActivity = Date.now(); }, true));
+
+    function lastMondayStart() {
+        const d = new Date();
+        d.setHours(0, 0, 0, 0);
+        d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); // volta até a segunda-feira desta semana
+        return d.getTime();
+    }
+
+    async function checkWeeklyReload() {
+        if (PAGE_LOADED_AT >= lastMondayStart()) return;      // já foi aberta nesta semana
+        if (Date.now() - lastActivity < RELOAD_IDLE_MS) return; // pessoa usou há menos de 1h: espera
+        try { await flushNotesNow(); } catch (e) {}
+        location.reload();
+    }
+
+    setInterval(checkWeeklyReload, 60000);
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) checkWeeklyReload(); });
 
     /* ===================== INICIALIZAÇÃO ===================== */
     document.addEventListener('DOMContentLoaded', () => {
